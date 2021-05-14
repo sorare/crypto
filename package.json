@@ -3,7 +3,7 @@
   "description": "Crypto used in the Sorare stack",
   "author": "Sorare",
   "license": "UNLICENSED",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist",
   "types": "dist",
   "files": [
@@ -50,10 +50,10 @@
     "ts-loader": "^6.2.1"
   },
   "scripts": {
-    "lint": "eslint src --ext .js --ext .ts --ext .tsx --max-warnings 0",
+    "lint": "eslint src --ext .js --ext .ts --max-warnings 0",
     "build": "yarn run build:types && yarn run build:js",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir dist --extensions \".js,.json,.ts,.tsx\" --source-maps inline",
+    "build:js": "babel src --out-dir dist --extensions \".js,.ts\" --source-maps inline",
     "prepublish": "yarn run build",
     "postinstall": "patch-package",
     "test": "jest ./src"

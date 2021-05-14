@@ -1,4 +1,4 @@
-image: registry.gitlab.com/sorare/crypto/ci:14.16.1
+image: registry.gitlab.com/sorare/crypto/ci:latest
 
 stages:
   - test
@@ -15,7 +15,7 @@ lint:
 test:
   stage: test
   script:
-  - yarn test
+    - yarn test
 
 build:
   stage: build
