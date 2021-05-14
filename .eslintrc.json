@@ -1,0 +1,148 @@
+{
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/react",
+    "prettier/standard"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true,
+    "mocha": true
+  },
+  "globals": {
+    "expect": true,
+    "assert": true,
+    "web3": true,
+    "Stripe": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "chai-friendly",
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "rules": {
+    "react/style-prop-object": 0,
+    "no-unused-expressions": 0,
+    "chai-friendly/no-unused-expressions": 2,
+    "import/no-named-as-default": 0,
+    "import/prefer-default-export": 0,
+    "import/no-unresolved": [
+      2, { "ignore": ["react"] }
+    ],
+    "react/prop-types": 0,
+    "react/jsx-props-no-spreading": 0,
+    "no-param-reassign": [
+      2,
+      {
+        "props": false
+      }
+    ],
+    "react/jsx-filename-extension": 0,
+    "react/destructuring-assignment": [
+      2,
+      "always",
+      {
+        "ignoreClassFields": true
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/tests/**",
+          "**/test/**",
+          "**/*.test.js",
+          "**/test.js",
+          "**/setupTests.js",
+          "**/__mocks__/**",
+          "**/*.stories.tsx",
+          "**/stories.tsx",
+          "**/scripts/*"
+        ],
+        "optionalDependencies": false
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "always",
+      {
+        "js": "never",
+        "jsx": "never",
+        "mjs": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true
+      }
+    ],
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "__typename"
+        ]
+      }
+    ],
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "to"
+        ]
+      }
+    ],
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/no-non-null-assertion": 0,
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/prefer-optional-chain": 2
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": [
+          "node_modules",
+          "src"
+        ],
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      },
+      "typescript": {}
+    }
+  }
+}
