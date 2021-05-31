@@ -1,5 +1,6 @@
 import BN from 'bn.js';
 import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
+import { ec } from 'elliptic';
 import { hdkey } from 'ethereumjs-wallet';
 
 import { LimitOrder, Transfer, Signature } from './types';
@@ -25,6 +26,19 @@ export const generateKey = (mnemonic?: string) => {
   const path = getAccountPath('starkex', 'sorare', ethereumAddress, 0);
   return getKeyPairFromPath(mnemonic, path);
 };
+
+export const exportPrivateKey = (key: ec.KeyPair) =>
+  `0x${key.getPrivate('hex').padStart(64, '0')}`;
+
+export const exportPublicKey = (key: ec.KeyPair) =>
+  `0x${key.getPublic(true, 'hex')}`;
+
+export const exportPublicKeyX = (key: ec.KeyPair) =>
+  `0x${key
+    .getPublic()
+    .getX()
+    .toString('hex')
+    .padStart(64, '0')}`;
 
 export const loadPrivateKey = (privateKey: string) =>
   starkEc.keyFromPrivate(privateKey.substring(2), 'hex');
