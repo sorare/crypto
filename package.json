@@ -3,7 +3,7 @@
   "description": "Crypto used in the Sorare stack",
   "author": "Sorare",
   "license": "UNLICENSED",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist",
   "types": "dist",
   "files": [
