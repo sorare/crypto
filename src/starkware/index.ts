@@ -31,6 +31,9 @@ export const exportPrivateKey = (key: ec.KeyPair) =>
   `0x${key.getPrivate('hex').padStart(64, '0')}`;
 
 export const exportPublicKey = (key: ec.KeyPair) =>
+  `0x${key.getPublic(true, 'hex')}`;
+
+export const exportPublicKeyX = (key: ec.KeyPair) =>
   `0x${key
     .getPublic()
     .getX()
