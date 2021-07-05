@@ -256,7 +256,7 @@ export function getTransferMsgHash(
   let cond = null;
   if (condition !== null) {
     cond = condition.substring(2);
-    assertInRange(new BN(cond), zeroBn, prime, 'condition');
+    assertInRange(new BN(cond, 16), zeroBn, prime, 'condition');
     instructionType = twoBn;
   }
   return hashMsg(
