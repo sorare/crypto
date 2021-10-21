@@ -10,7 +10,7 @@ import {
   sign as starkSign,
   verify as starkVerify,
   getTransferMsgHash,
-  getLimitOrderMsgHash
+  getLimitOrderMsgHash,
 } from './signature';
 
 export const PATH = "m/44'/60'/0'/0/0";
@@ -76,7 +76,7 @@ export const sign = (privateKey: string, message: string) => {
 
   return {
     r: `0x${r.toString(16)}`,
-    s: `0x${s.toString(16)}`
+    s: `0x${s.toString(16)}`,
   };
 };
 
@@ -88,7 +88,7 @@ export const verify = (
   const key = loadPublicKey(publicKey);
   const sig = {
     r: new BN(signature.r.substring(2), 16),
-    s: new BN(signature.s.substring(2), 16)
+    s: new BN(signature.s.substring(2), 16),
   };
 
   return starkVerify(key, message, sig);

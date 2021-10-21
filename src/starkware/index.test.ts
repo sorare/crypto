@@ -5,7 +5,7 @@ import {
   signTransfer,
   signLimitOrder,
   verifyTransfer,
-  verifyLimitOrder
+  verifyLimitOrder,
 } from '.';
 
 describe('generateKey', () => {
@@ -31,7 +31,7 @@ describe('transfer', () => {
     receiverVaultId: '21',
     receiverPublicKey:
       '0x5fa3383597691ea9d827a79e1a4f0f7949435ced18ca9619de8ab97e661020',
-    expirationTimestamp: 438953
+    expirationTimestamp: 438953,
   };
 
   const privateKey =
@@ -67,7 +67,7 @@ describe('limitOrder', () => {
     tokenBuy:
       '0x774961c824a3b0fb3d2965f01471c9c7734bf8dbde659e0c08dca2ef18d56a',
     nonce: 0,
-    expirationTimestamp: 438953
+    expirationTimestamp: 438953,
   };
 
   const privateKey =

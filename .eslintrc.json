@@ -91,7 +91,8 @@
     "prettier/prettier": [
       "error",
       {
-        "singleQuote": true
+        "singleQuote": true,
+        "trailingComma": "es5"
       }
     ],
     "no-underscore-dangle": [

@@ -54,7 +54,7 @@ export const starkEc = new EllipticCurve(
       '08000000 00000010 ffffffff ffffffff b781126d cae7b232 1e66a241 adc64d2f',
     hash: hash.sha256,
     gRed: false,
-    g: constantPointsHex[1]
+    g: constantPointsHex[1],
   })
 );
 
@@ -132,12 +132,12 @@ function hashMsg(
   if (condition === null) {
     msgHash = pedersen([
       pedersen([token0, token1OrPubKey]),
-      packedMessage.toString(16)
+      packedMessage.toString(16),
     ]);
   } else {
     msgHash = pedersen([
       pedersen([pedersen([token0, token1OrPubKey]), condition]),
-      packedMessage.toString(16)
+      packedMessage.toString(16),
     ]);
   }
 
@@ -229,12 +229,12 @@ export function getTransferMsgHash(
   receiverVaultId,
   receiverPublicKey,
   expirationTimestamp,
-  condition = null
+  condition
 ) {
   assert(
     hasHexPrefix(token) &&
       hasHexPrefix(receiverPublicKey) &&
-      (condition === null || hasHexPrefix(condition)),
+      (!!condition || hasHexPrefix(condition)),
     'Hex strings expected to be prefixed with 0x.'
   );
   const amountBn = new BN(amount, 10);
@@ -254,7 +254,7 @@ export function getTransferMsgHash(
   assertInRange(expirationTimestampBn, zeroBn, twoPow22Bn);
   let instructionType = oneBn;
   let cond = null;
-  if (condition !== null) {
+  if (condition) {
     cond = condition.substring(2);
     assertInRange(new BN(cond, 16), zeroBn, prime, 'condition');
     instructionType = twoBn;

@@ -21,7 +21,7 @@ import {
   hexToBuffer,
   removeHexPrefix,
   sanitizeBytes,
-  numberToHex
+  numberToHex,
 } from 'enc-utils';
 import BN from 'bn.js';
 import hash from 'hash.js';
