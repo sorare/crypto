@@ -10,7 +10,9 @@ import {
   sign as starkSign,
   verify as starkVerify,
   getTransferMsgHash,
-  getLimitOrderMsgHash
+  getTransferMsgHashWithFee,
+  getLimitOrderMsgHash,
+  getLimitOrderMsgHashWithFee,
 } from './signature';
 
 export const PATH = "m/44'/60'/0'/0/0";
@@ -46,29 +48,75 @@ export const loadPrivateKey = (privateKey: string) =>
 export const loadPublicKey = (publicKey: string) =>
   starkEc.keyFromPublic(publicKey.substring(2), 'hex');
 
-export const hashTransfer = (transfer: Transfer) =>
-  getTransferMsgHash(
-    transfer.amount,
-    transfer.nonce,
-    transfer.senderVaultId,
-    transfer.token,
-    transfer.receiverVaultId,
-    transfer.receiverPublicKey,
-    transfer.expirationTimestamp,
-    transfer.condition
-  );
+export const hashTransfer = (transfer: Transfer) => {
+  const {
+    amount,
+    nonce,
+    senderVaultId,
+    token,
+    receiverVaultId,
+    receiverPublicKey,
+    expirationTimestamp,
+    condition,
+    fee,
+  } = transfer;
 
-export const hashLimitOrder = (limitOrder: LimitOrder) =>
-  getLimitOrderMsgHash(
-    limitOrder.vaultIdSell,
-    limitOrder.vaultIdBuy,
-    limitOrder.amountSell,
-    limitOrder.amountBuy,
-    limitOrder.tokenSell,
-    limitOrder.tokenBuy,
-    limitOrder.nonce,
-    limitOrder.expirationTimestamp
-  );
+  const args = [
+    amount,
+    nonce,
+    senderVaultId,
+    token,
+    receiverVaultId,
+    receiverPublicKey,
+    expirationTimestamp,
+    condition,
+  ];
+
+  if (fee)
+    return getTransferMsgHashWithFee(
+      ...args,
+      fee.token,
+      fee.vaultId,
+      fee.limit
+    );
+
+  return getTransferMsgHash(...args);
+};
+
+export const hashLimitOrder = (limitOrder: LimitOrder) => {
+  const {
+    vaultIdSell,
+    vaultIdBuy,
+    amountSell,
+    amountBuy,
+    tokenSell,
+    tokenBuy,
+    nonce,
+    expirationTimestamp,
+    fee,
+  } = limitOrder;
+
+  const args = [
+    vaultIdSell,
+    vaultIdBuy,
+    amountSell,
+    amountBuy,
+    tokenSell,
+    tokenBuy,
+    nonce,
+    expirationTimestamp,
+  ];
+
+  if (fee)
+    return getLimitOrderMsgHashWithFee(
+      ...args,
+      fee.token,
+      fee.vaultId,
+      fee.limit
+    );
+
+  return getLimitOrderMsgHash(...args);
+};
 
 export const sign = (privateKey: string, message: string) => {
   const key = loadPrivateKey(privateKey);
@@ -76,7 +124,7 @@ export const sign = (privateKey: string, message: string) => {
 
   return {
     r: `0x${r.toString(16)}`,
-    s: `0x${s.toString(16)}`
+    s: `0x${s.toString(16)}`,
   };
 };
 
@@ -88,7 +136,7 @@ export const verify = (
   const key = loadPublicKey(publicKey);
   const sig = {
     r: new BN(signature.r.substring(2), 16),
-    s: new BN(signature.s.substring(2), 16)
+    s: new BN(signature.s.substring(2), 16),
   };
 
   return starkVerify(key, message, sig);
