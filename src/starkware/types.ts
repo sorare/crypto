@@ -3,9 +3,9 @@ import { ec } from 'elliptic';
 export type KeyPair = ec.KeyPair;
 
 export interface Fee {
-  token: string;
-  vaultId: string;
-  limit: string;
+  tokenId: string;
+  sourceVaultId: string;
+  feeLimit: string;
 }
 
 export interface Transfer {
@@ -17,7 +17,7 @@ export interface Transfer {
   nonce: number;
   expirationTimestamp: number;
   condition?: string;
-  fee?: Fee;
+  feeInfoUser?: Fee;
 }
 
 export interface LimitOrder {
@@ -29,7 +29,7 @@ export interface LimitOrder {
   tokenBuy: string;
   nonce: number;
   expirationTimestamp: number;
-  fee?: Fee;
+  feeInfo?: Fee;
 }
 
 export interface Signature {

@@ -7,7 +7,7 @@ import {
   verifyTransfer,
   verifyLimitOrder,
 } from '.';
-import { Transfer } from './types';
+import { LimitOrder, Transfer } from './types';
 
 describe('generateKey', () => {
   const mnemonic =
@@ -62,13 +62,13 @@ describe('transfer', () => {
   });
 
   describe('with fees', () => {
-    const transferWithFee = {
+    const transferWithFee: Transfer = {
       ...transfer,
-      fee: {
-        vaultId: '46',
-        token:
+      feeInfoUser: {
+        sourceVaultId: '46',
+        tokenId:
           '0x3003a65651d3b9fb2eff934a4416db301afd112a8492aaf8d7297fc87dcd9f4',
-        limit: '10',
+        feeLimit: '10',
       },
     };
     const { r, s } = signTransfer(privateKey, transferWithFee);
@@ -135,13 +135,13 @@ describe('limitOrder', () => {
   });
 
   describe('with fee', () => {
-    const limitOrderWithFee = {
+    const limitOrderWithFee: LimitOrder = {
       ...limitOrder,
-      fee: {
-        vaultId: '46',
-        token:
+      feeInfo: {
+        sourceVaultId: '46',
+        tokenId:
           '0x3003a65651d3b9fb2eff934a4416db301afd112a8492aaf8d7297fc87dcd9f4',
-        limit: '10',
+        feeLimit: '10',
       },
     };
 

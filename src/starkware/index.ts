@@ -58,7 +58,7 @@ export const hashTransfer = (transfer: Transfer) => {
     receiverPublicKey,
     expirationTimestamp,
     condition,
-    fee,
+    feeInfoUser,
   } = transfer;
 
   const args = [
@@ -72,12 +72,12 @@ export const hashTransfer = (transfer: Transfer) => {
     condition,
   ];
 
-  if (fee)
+  if (feeInfoUser)
     return getTransferMsgHashWithFee(
       ...args,
-      fee.token,
-      fee.vaultId,
-      fee.limit
+      feeInfoUser.tokenId,
+      feeInfoUser.sourceVaultId,
+      feeInfoUser.feeLimit
     );
 
   return getTransferMsgHash(...args);
@@ -93,7 +93,7 @@ export const hashLimitOrder = (limitOrder: LimitOrder) => {
     tokenBuy,
     nonce,
     expirationTimestamp,
-    fee,
+    feeInfo,
   } = limitOrder;
 
   const args = [
@@ -107,12 +107,12 @@ export const hashLimitOrder = (limitOrder: LimitOrder) => {
     expirationTimestamp,
   ];
 
-  if (fee)
+  if (feeInfo)
     return getLimitOrderMsgHashWithFee(
       ...args,
-      fee.token,
-      fee.vaultId,
-      fee.limit
+      feeInfo.tokenId,
+      feeInfo.sourceVaultId,
+      feeInfo.feeLimit
     );
 
   return getLimitOrderMsgHash(...args);
