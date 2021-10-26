@@ -4,7 +4,7 @@ export type KeyPair = ec.KeyPair;
 
 export interface Fee {
   tokenId: string;
-  sourceVaultId: string;
+  sourceVaultId: number | string;
   feeLimit: string;
 }
 
