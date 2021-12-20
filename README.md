@@ -23,17 +23,17 @@
 
 # Functions
 
-## `signLimitOrder`
+## `signLimitOrders`
 
-The `signLimitOrder(privateKey, limitOrder)` function is used to sign a `LimitOrder` object with a Sorare private key.
+The `signLimitOrders(privateKey, limitOrders)` function is used to sign a list of `LimitOrder` objects with a Sorare private key.
 
 ```ts
-import { signLimitOrder } from '@sorare/crypto';
+import { signLimitOrders } from '@sorare/crypto';
 
 const privateKey = /* Your Sorare private key */;
-const limitOrder = /* The LimitOrder object you get from GraphQL */;
+const limitOrders = /* The list of LimitOrder objects you get from GraphQL */;
 
-const signature = signLimitOrder(privateKey, limitOrder);
+const signature = signLimitOrders(privateKey, limitOrders);
 ```
 
 # License

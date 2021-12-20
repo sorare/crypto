@@ -1,10 +1,10 @@
-import BN from 'bn.js';
-import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
-import { ec } from 'elliptic';
-import { hdkey } from 'ethereumjs-wallet';
+import BN from "bn.js";
+import { generateMnemonic, mnemonicToSeedSync } from "bip39";
+import { ec } from "elliptic";
+import { hdkey } from "ethereumjs-wallet";
 
-import { LimitOrder, Transfer, Signature } from './types';
-import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
+import { LimitOrder, Transfer, Signature } from "./types";
+import { getAccountPath, getKeyPairFromPath } from "./starkware/keyDerivation";
 import {
   starkEc,
   sign as starkSign,
@@ -13,7 +13,7 @@ import {
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
-} from './starkware/signature';
+} from "./starkware/signature";
 
 const PATH = "m/44'/60'/0'/0/0";
 
@@ -25,24 +25,28 @@ export const generateKey = (mnemonic?: string) => {
     .getWallet()
     .getAddressString();
 
-  const path = getAccountPath('starkex', 'sorare', ethereumAddress, 0);
+  const path = getAccountPath("starkex", "sorare", ethereumAddress, 0);
   return getKeyPairFromPath(mnemonic, path);
 };
 
 export const exportPrivateKey = (key: ec.KeyPair): string =>
-  `0x${key.getPrivate('hex').padStart(64, '0')}`;
+  `0x${key.getPrivate("hex").padStart(64, "0")}`;
 
 export const exportPublicKey = (key: ec.KeyPair): string =>
-  `0x${key.getPublic(true, 'hex')}`;
+  `0x${key.getPublic(true, "hex")}`;
 
 export const exportPublicKeyX = (key: ec.KeyPair): string =>
-  `0x${key.getPublic().getX().toString('hex').padStart(64, '0')}`;
+  `0x${key
+    .getPublic()
+    .getX()
+    .toString("hex")
+    .padStart(64, "0")}`;
 
 export const loadPrivateKey = (privateKey: string): ec.KeyPair =>
-  starkEc.keyFromPrivate(privateKey.substring(2), 'hex');
+  starkEc.keyFromPrivate(privateKey.substring(2), "hex");
 
 export const loadPublicKey = (publicKey: string): ec.KeyPair =>
-  starkEc.keyFromPublic(publicKey.substring(2), 'hex');
+  starkEc.keyFromPublic(publicKey.substring(2), "hex");
 
 const hashTransfer = (transfer: Transfer) => {
   const {
@@ -160,6 +164,15 @@ export const signLimitOrder = (
   const message = hashLimitOrder(limitOrder);
 
   return sign(privateKey, message);
+};
+
+export const signLimitOrders = (
+  privateKey: string,
+  limitOrders: [LimitOrder]
+): Signature[] => {
+  return limitOrders.map((limitOrder) =>
+    signLimitOrder(privateKey, limitOrder)
+  );
 };
 
 export const verifyLimitOrder = (
