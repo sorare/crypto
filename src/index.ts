@@ -36,7 +36,11 @@ export const exportPublicKey = (key: ec.KeyPair): string =>
   `0x${key.getPublic(true, 'hex')}`;
 
 export const exportPublicKeyX = (key: ec.KeyPair): string =>
-  `0x${key.getPublic().getX().toString('hex').padStart(64, '0')}`;
+  `0x${key // force line-break (https://github.com/prettier/prettier/issues/3107)
+    .getPublic()
+    .getX()
+    .toString('hex')
+    .padStart(64, '0')}`;
 
 export const loadPrivateKey = (privateKey: string): ec.KeyPair =>
   starkEc.keyFromPrivate(privateKey.substring(2), 'hex');

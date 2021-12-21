@@ -52,7 +52,8 @@
       "error",
       {
         "singleQuote": true,
-        "trailingComma": "es5"
+        "trailingComma": "es5",
+        "arrowParens": "always"
       }
     ],
     "no-underscore-dangle": ["error", {}],

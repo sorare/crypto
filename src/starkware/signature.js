@@ -387,8 +387,8 @@ export function getTransferMsgHash(
 ) {
   assert(
     hasHexPrefix(token) &&
-      hasHexPrefix(receiverPublicKey) &&
-      (!condition || hasHexPrefix(condition)),
+    hasHexPrefix(receiverPublicKey) &&
+    (!condition || hasHexPrefix(condition)),
     'Hex strings expected to be prefixed with 0x.'
   );
   const amountBn = new BN(amount, 10);
@@ -451,9 +451,9 @@ export function getTransferMsgHashWithFee(
 ) {
   assert(
     hasHexPrefix(feeToken) &&
-      hasHexPrefix(token) &&
-      hasHexPrefix(receiverStarkKey) &&
-      (!condition || hasHexPrefix(condition)),
+    hasHexPrefix(token) &&
+    hasHexPrefix(receiverStarkKey) &&
+    (!condition || hasHexPrefix(condition)),
     'Hex strings expected to be prefixed with 0x.'
   );
   const amountBn = new BN(amount, 10);

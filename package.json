@@ -42,8 +42,13 @@
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.4"
   },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "arrowParens": "always"
+  },
   "scripts": {
-    "lint": "yarn run eslint src/*.ts --max-warnings 0 --fix",
+    "lint": "yarn run eslint src/*.ts --max-warnings 0",
     "build": "yarn run build:types && yarn run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir dist --extensions \".js,.ts\" --source-maps inline",
