@@ -48,6 +48,7 @@
     "arrowParens": "always"
   },
   "scripts": {
+    "clean": "rm -rf dist/",
     "lint": "yarn run eslint src/*.ts --max-warnings 0",
     "build": "yarn run build:types && yarn run build:js",
     "build:types": "tsc --emitDeclarationOnly",
