@@ -36,17 +36,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": [
-          "**/tests/**",
-          "**/test/**",
-          "**/*.test.js",
-          "**/test.js",
-          "**/setupTests.js",
-          "**/__mocks__/**",
-          "**/*.stories.tsx",
-          "**/stories.tsx",
-          "**/scripts/*"
-        ],
+        "devDependencies": ["**/*.test.js"],
         "optionalDependencies": false
       }
     ],
@@ -65,12 +55,7 @@
         "trailingComma": "es5"
       }
     ],
-    "no-underscore-dangle": [
-      "error",
-      {
-        "allow": ["__typename"]
-      }
-    ],
+    "no-underscore-dangle": ["error", {}],
     "@typescript-eslint/indent": 0,
     "@typescript-eslint/camelcase": 0,
     "@typescript-eslint/no-explicit-any": 0,
@@ -82,7 +67,7 @@
   },
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [".ts"]
     },
     "import/resolver": {
       "node": {
