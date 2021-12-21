@@ -29,23 +29,23 @@ export const generateKey = (mnemonic?: string) => {
   return getKeyPairFromPath(mnemonic, path);
 };
 
-export const exportPrivateKey = (key: ec.KeyPair): string =>
+export const exportPrivateKey = (key: ec.KeyPair) =>
   `0x${key.getPrivate('hex').padStart(64, '0')}`;
 
-export const exportPublicKey = (key: ec.KeyPair): string =>
+export const exportPublicKey = (key: ec.KeyPair) =>
   `0x${key.getPublic(true, 'hex')}`;
 
-export const exportPublicKeyX = (key: ec.KeyPair): string =>
+export const exportPublicKeyX = (key: ec.KeyPair) =>
   `0x${key // force line-break (https://github.com/prettier/prettier/issues/3107)
     .getPublic()
     .getX()
     .toString('hex')
     .padStart(64, '0')}`;
 
-export const loadPrivateKey = (privateKey: string): ec.KeyPair =>
+export const loadPrivateKey = (privateKey: string) =>
   starkEc.keyFromPrivate(privateKey.substring(2), 'hex');
 
-export const loadPublicKey = (publicKey: string): ec.KeyPair =>
+export const loadPublicKey = (publicKey: string) =>
   starkEc.keyFromPublic(publicKey.substring(2), 'hex');
 
 const hashTransfer = (transfer: Transfer) => {
@@ -118,7 +118,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
   return getLimitOrderMsgHash(...args);
 };
 
-const sign = (privateKey: string, message: string) => {
+const sign = (privateKey: string, message: string): Signature => {
   const key = loadPrivateKey(privateKey);
   const { r, s } = starkSign(key, message);
 
