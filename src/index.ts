@@ -166,12 +166,6 @@ export const signLimitOrder = (
   return sign(privateKey, message);
 };
 
-export const signLimitOrders = (
-  privateKey: string,
-  limitOrders: [LimitOrder]
-): Signature[] =>
-  limitOrders.map((limitOrder) => signLimitOrder(privateKey, limitOrder));
-
 export const verifyLimitOrder = (
   publicKey: string,
   limitOrder: LimitOrder,
