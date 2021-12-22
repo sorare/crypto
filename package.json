@@ -56,7 +56,8 @@
     "prepublish": "yarn run build",
     "postinstall": "patch-package",
     "test": "jest ./src",
-    "release": "yarn clean && yarn version && yarn build && cp package.json README.md LICENSE dist/ && rm dist/index.test.* && npm publish dist/ --access public"
+    "package": "yarn build && cp package.json README.md LICENSE dist/ && rm dist/index.test.*",
+    "release": "yarn clean && yarn version && yarn package && npm publish dist/ --access public"
   },
   "browserslist": [
     ">0.2%",
