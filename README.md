@@ -22,7 +22,7 @@
   </a>
 </p>
 
-`@sorare/crypto` is a JavaScript library providing various crypto functions to be used to sign your Sorare LimitOrder objects in order to make a bid, create or accept an offer. It can be used in both NodeJS and Browser environments.
+`@sorare/crypto` is a JavaScript library (TypeScript types included) providing various crypto functions to be used to sign your Sorare LimitOrder objects in order to make a bid, create or accept an offer. It can be used in both NodeJS and Browser environments.
 
 # Functions
 
