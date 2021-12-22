@@ -1,11 +1,8 @@
 {
   "extends": [
-    "airbnb",
-    "airbnb/hooks",
+    "airbnb-base",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "prettier/react",
-    "prettier/standard"
+    "prettier"
   ],
   "env": {
     "browser": true,
@@ -21,59 +18,25 @@
   },
   "parserOptions": {
     "ecmaVersion": 7,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "sourceType": "module"
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "chai-friendly",
-    "react-hooks",
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "plugins": ["chai-friendly", "@typescript-eslint", "prettier"],
   "rules": {
-    "react/style-prop-object": 0,
     "no-unused-expressions": 0,
     "chai-friendly/no-unused-expressions": 2,
     "import/no-named-as-default": 0,
     "import/prefer-default-export": 0,
-    "import/no-unresolved": [
-      2, { "ignore": ["react"] }
-    ],
-    "react/prop-types": 0,
-    "react/jsx-props-no-spreading": 0,
     "no-param-reassign": [
       2,
       {
         "props": false
       }
     ],
-    "react/jsx-filename-extension": 0,
-    "react/destructuring-assignment": [
-      2,
-      "always",
-      {
-        "ignoreClassFields": true
-      }
-    ],
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "error",
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": [
-          "**/tests/**",
-          "**/test/**",
-          "**/*.test.js",
-          "**/test.js",
-          "**/setupTests.js",
-          "**/__mocks__/**",
-          "**/*.stories.tsx",
-          "**/stories.tsx",
-          "**/scripts/*"
-        ],
+        "devDependencies": ["**/*.test.js"],
         "optionalDependencies": false
       }
     ],
@@ -82,38 +45,18 @@
       "always",
       {
         "js": "never",
-        "jsx": "never",
-        "mjs": "never",
-        "ts": "never",
-        "tsx": "never"
+        "ts": "never"
       }
     ],
     "prettier/prettier": [
       "error",
       {
         "singleQuote": true,
-        "trailingComma": "es5"
+        "trailingComma": "es5",
+        "arrowParens": "always"
       }
     ],
-    "no-underscore-dangle": [
-      "error",
-      {
-        "allow": [
-          "__typename"
-        ]
-      }
-    ],
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": [
-          "Link"
-        ],
-        "specialLink": [
-          "to"
-        ]
-      }
-    ],
+    "no-underscore-dangle": ["error", {}],
     "@typescript-eslint/indent": 0,
     "@typescript-eslint/camelcase": 0,
     "@typescript-eslint/no-explicit-any": 0,
@@ -125,23 +68,12 @@
   },
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts",
-        ".tsx"
-      ]
+      "@typescript-eslint/parser": [".ts"]
     },
     "import/resolver": {
       "node": {
-        "moduleDirectory": [
-          "node_modules",
-          "src"
-        ],
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
+        "moduleDirectory": ["node_modules", "src"],
+        "extensions": [".js", ".ts"]
       },
       "typescript": {}
     }
