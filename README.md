@@ -12,7 +12,7 @@
     <img src='https://badges.aleen42.com/src/typescript.svg' />
   </a> 
   <a href="https://www.npmjs.com/package/@sorare/crypto">
-    <img src='https://img.shields.io/github/package-json/v/@sorare/crypto?label=npm' />
+    <img src='https://img.shields.io/npm/v/@sorare/crypto' />
   </a>
   <a href="https://github.com/sorare/crypto/actions/workflows/node.js.yml">
     <img src='https://github.com/sorare/crypto/actions/workflows/node.js.yml/badge.svg' />
