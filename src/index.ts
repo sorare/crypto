@@ -15,6 +15,8 @@ import {
   getLimitOrderMsgHashWithFee,
 } from './starkware/signature';
 
+export { LimitOrder, Transfer, Signature } from './types';
+
 const PATH = "m/44'/60'/0'/0/0";
 
 export const generateKey = (mnemonic?: string) => {
