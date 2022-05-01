@@ -13,7 +13,12 @@ import {
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
+  USE_RUST,
 } from './starkware/signature';
+import {
+  verifyStark,
+  signStark,
+} from '../starknet-crypto-napi';
 
 export { LimitOrder, Transfer, Signature } from './types';
 
@@ -121,6 +126,10 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
 };
 
 const sign = (privateKey: string, message: string): Signature => {
+  if (USE_RUST) {
+    return signStark(privateKey, message);
+  }
+
   const key = loadPrivateKey(privateKey);
   const { r, s } = starkSign(key, message);
 
@@ -131,6 +140,12 @@ const sign = (privateKey: string, message: string): Signature => {
 };
 
 const verify = (publicKey: string, message: string, signature: Signature) => {
+  if (USE_RUST) {
+    // TODO: Figure out why 0x030 is present in front of public key
+    publicKey = publicKey.slice(5, publicKey.length);
+    return verifyStark(publicKey, message, signature.r, signature.s);
+  }
+
   const key = loadPublicKey(publicKey);
   const sig = {
     r: new BN(signature.r.substring(2), 16),

@@ -1,0 +1,16 @@
+{
+  "name": "starknet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "napi build --release",
+    "build:debug": "napi build"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^1.0.0"
+  },
+  "dependencies": {
+    "@node-rs/helper": "^1.3.3"
+  }
+}

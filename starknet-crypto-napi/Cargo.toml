@@ -1,0 +1,16 @@
+[package]
+name = "starknet-crypto-napi"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+starknet-crypto = { git = "https://github.com/xJonathanLEI/starknet-rs", rev = "c9845b35911157c4e11700612049ac15c7c86fd7", package = "starknet-crypto" }
+starknet-ff = { git = "https://github.com/xJonathanLEI/starknet-rs", rev = "c9845b35911157c4e11700612049ac15c7c86fd7", package = "starknet-ff" }
+napi = "2"
+napi-derive = "2"
+
+[build-dependencies]
+napi-build = "1"

@@ -20,6 +20,9 @@ import { curves as eCurves, ec as EllipticCurve } from 'elliptic';
 import assert from 'assert';
 
 import constantPointsHex from './constant_points';
+import {pedersenStark} from '../../starknet-crypto-napi';
+
+export const USE_RUST = true;
 
 // Equals 2**251 + 17 * 2**192 + 1.
 export const prime = new BN(
@@ -96,6 +99,10 @@ function assertInRange(input, lowerBound, upperBound, inputName = '') {
  points defined in the documentation.
 */
 export function pedersen(input) {
+  if (USE_RUST) {
+    return pedersenStark(input[0], input[1]);
+  }
+
   let point = shiftPoint;
   for (let i = 0; i < input.length; i += 1) {
     let x = new BN(input[i], 16);
