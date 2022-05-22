@@ -17,7 +17,7 @@
 const path = require('path');
 const BN = require('bn.js');
 const BigIntBuffer = require('bigint-buffer');
-const assert = require('assert/strict');
+const assert = require('assert');
 const ffi = require('ffi-napi');
 
 // Native crypto bindings.
@@ -43,7 +43,7 @@ function pedersen(x, y) {
   const y_buf = BigIntBuffer.toBufferLE(y, 32);
   const res_buf = Buffer.alloc(1024);
   const res = libcrypto.Hash(x_buf, y_buf, res_buf);
-  assert(res == 0, 'Error: ' + res_buf.toString('utf-8'));
+  assert.strict(res == 0, 'Error: ' + res_buf.toString('utf-8'));
   return BigIntBuffer.toBigIntLE(res_buf);
 }
 
@@ -74,7 +74,7 @@ function sign(private_key, message, k) {
   const k_buf = BigIntBuffer.toBufferLE(k, 32);
   const res_buf = Buffer.alloc(1024);
   const res = libcrypto.Sign(private_key_buf, message_buf, k_buf, res_buf);
-  assert(res == 0, 'Error: ' + res_buf.toString('utf-8'));
+  assert.strict(res == 0, 'Error: ' + res_buf.toString('utf-8'));
   const r = BigIntBuffer.toBigIntLE(res_buf.slice(0, 32));
   const w = BigIntBuffer.toBigIntLE(res_buf.slice(32, 64));
   const bnW = new BN(w.toString(16), 16);
@@ -91,7 +91,7 @@ function getPublicKey(private_key) {
   const private_key_buf = BigIntBuffer.toBufferLE(private_key, 32);
   const res_buf = Buffer.alloc(1024);
   const res = libcrypto.GetPublicKey(private_key_buf, res_buf);
-  assert(res == 0, 'Error: ' + res_buf.toString('utf-8'));
+  assert.strict(res == 0, 'Error: ' + res_buf.toString('utf-8'));
   return BigIntBuffer.toBigIntLE(res_buf);
 }
 

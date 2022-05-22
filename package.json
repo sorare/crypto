@@ -52,12 +52,14 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "lint": "yarn run eslint src/*.ts --max-warnings 0",
-    "build": "yarn run build:types && yarn run build:js",
+    "build": "yarn run build:types && yarn run build:js && yarn run build:cpp",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --ignore src/crypto-cpp/build,src/crypto-cpp/**/node_modules --out-dir dist --extensions \".js,.ts\" --source-maps inline",
+    "build:cpp": "cd src/crypto-cpp && mkdir -p build/Release && cd build/Release && cmake -DCMAKE_BUILD_TYPE=Release ../.. && make",
     "prepublish": "yarn run build",
     "postinstall": "patch-package",
     "test": "jest ./src",
+    "test:cpp": "cd src/crypto-cpp && CTEST_OUTPUT_ON_FAILURE=1 make -C build/Release test",
     "package": "yarn build && cp package.json README.md LICENSE dist/ && cp src/crypto-cpp/src/starkware/crypto/ffi/js/libcrypto_c_exports.so dist/crypto-cpp/src/starkware/crypto/ffi/js && rm dist/index.test.* && rm -r dist/crypto-cpp/src/starkware/crypto/ffi/js/test",
     "release": "yarn clean && yarn version && yarn package && npm publish dist/ --access public"
   },

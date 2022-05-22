@@ -28,16 +28,7 @@ jobs:
       run: |
         apt-get update
         apt-get install -y cmake clang libgtest-dev libgmock-dev
-    - name: Build C++ dynamic library
-      run: |
-        cd src/crypto-cpp
-        (cd src/starkware/crypto/ffi/js; npm install)
-        mkdir -p build/Release
-        (cd build/Release; cmake -DCMAKE_BUILD_TYPE=Release ../..)
-        make -C build/Release
-    - name: Test C++ dynamic library
-      run: |
-        cd src/crypto-cpp
-        CTEST_OUTPUT_ON_FAILURE=1 make -C build/Release test
+    - run: npm run build:cpp
+    - run: npm run test:cpp
     - run: npm install
     - run: npm test
