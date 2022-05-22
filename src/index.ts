@@ -6,6 +6,7 @@ import { hdkey } from 'ethereumjs-wallet';
 import { LimitOrder, Transfer, Signature } from './types';
 import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
 import {
+  useCryptoCpp,
   starkEc,
   sign as starkSign,
   verify as starkVerify,
@@ -126,7 +127,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
 
 const sign = (privateKey: string, message: string): Signature => {
   let sig;
-  if (true) {
+  if (useCryptoCpp) {
     sig = starkSignCpp(
       BigInt(privateKey),
       BigInt(`0x${message}`),
@@ -144,7 +145,7 @@ const sign = (privateKey: string, message: string): Signature => {
 };
 
 const verify = (publicKey: string, message: string, signature: Signature) => {
-  if (true) {
+  if (useCryptoCpp) {
     return starkVerifyCpp(
       BigInt(publicKey),
       BigInt(`0x${message}`),

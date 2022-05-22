@@ -22,6 +22,8 @@ import assert from 'assert';
 import constantPointsHex from './constant_points';
 import { pedersen as pedersenCpp } from '../crypto-cpp/src/starkware/crypto/ffi/js/crypto';
 
+export const useCryptoCpp = Boolean(process.env.USE_STARKWARE_CRYPTO_CPP);
+
 // Equals 2**251 + 17 * 2**192 + 1.
 export const prime = new BN(
   '800000000000011000000000000000000000000000000000000000000000001',
@@ -94,7 +96,7 @@ function assertInRange(input, lowerBound, upperBound, inputName = '') {
  points defined in the documentation.
 */
 export function pedersen(input) {
-  if (true) {
+  if (useCryptoCpp) {
     if (typeof input[0] === 'string') {
       input[0] = BigInt(`0x${input[0]}`);
     }
