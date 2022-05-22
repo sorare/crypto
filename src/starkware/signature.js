@@ -20,6 +20,7 @@ import { curves as eCurves, ec as EllipticCurve } from 'elliptic';
 import assert from 'assert';
 
 import constantPointsHex from './constant_points';
+import { pedersen as pedersenCpp } from '../crypto-cpp/src/starkware/crypto/ffi/js/crypto';
 
 // Equals 2**251 + 17 * 2**192 + 1.
 export const prime = new BN(
@@ -49,19 +50,16 @@ export const starkEc = new EllipticCurve(
     type: 'short',
     prime: null,
     p: prime,
-    a:
-      '00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000001',
-    b:
-      '06f21413 efbe40de 150e596d 72f7a8c5 609ad26c 15c915c1 f4cdfcb9 9cee9e89',
-    n:
-      '08000000 00000010 ffffffff ffffffff b781126d cae7b232 1e66a241 adc64d2f',
+    a: '00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000001',
+    b: '06f21413 efbe40de 150e596d 72f7a8c5 609ad26c 15c915c1 f4cdfcb9 9cee9e89',
+    n: '08000000 00000010 ffffffff ffffffff b781126d cae7b232 1e66a241 adc64d2f',
     hash: hash.sha256,
     gRed: false,
     g: constantPointsHex[1],
   })
 );
 
-export const constantPoints = constantPointsHex.map(coords =>
+export const constantPoints = constantPointsHex.map((coords) =>
   starkEc.curve.point(new BN(coords[0], 16), new BN(coords[1], 16))
 );
 export const shiftPoint = constantPoints[0];
@@ -96,6 +94,16 @@ function assertInRange(input, lowerBound, upperBound, inputName = '') {
  points defined in the documentation.
 */
 export function pedersen(input) {
+  if (true) {
+    if (typeof input[0] === 'string') {
+      input[0] = BigInt(`0x${input[0]}`);
+    }
+    if (typeof input[1] === 'string') {
+      input[1] = BigInt(`0x${input[1]}`);
+    }
+    return pedersenCpp(input[0], input[1]).toString(16);
+  }
+
   let point = shiftPoint;
   for (let i = 0; i < input.length; i += 1) {
     let x = new BN(input[i], 16);
@@ -387,8 +395,8 @@ export function getTransferMsgHash(
 ) {
   assert(
     hasHexPrefix(token) &&
-    hasHexPrefix(receiverPublicKey) &&
-    (!condition || hasHexPrefix(condition)),
+      hasHexPrefix(receiverPublicKey) &&
+      (!condition || hasHexPrefix(condition)),
     'Hex strings expected to be prefixed with 0x.'
   );
   const amountBn = new BN(amount, 10);
@@ -451,9 +459,9 @@ export function getTransferMsgHashWithFee(
 ) {
   assert(
     hasHexPrefix(feeToken) &&
-    hasHexPrefix(token) &&
-    hasHexPrefix(receiverStarkKey) &&
-    (!condition || hasHexPrefix(condition)),
+      hasHexPrefix(token) &&
+      hasHexPrefix(receiverStarkKey) &&
+      (!condition || hasHexPrefix(condition)),
     'Hex strings expected to be prefixed with 0x.'
   );
   const amountBn = new BN(amount, 10);

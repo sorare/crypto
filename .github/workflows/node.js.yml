@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 15.x, 16.x]
+        node-version: [14.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,6 +23,21 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        # cache: 'npm'
+    - name: Install C++ dependencies
+      run: |
+        apt-get update
+        apt-get install -y cmake clang libgtest-dev libgmock-dev
+    - name: Build C++ dynamic library
+      run: |
+        cd src/crypto-cpp
+        (cd src/starkware/crypto/ffi/js; npm install)
+        mkdir -p build/Release
+        (cd build/Release; cmake -DCMAKE_BUILD_TYPE=Release ../..)
+        make -C build/Release
+    - name: Test C++ dynamic library
+      run: |
+        cd src/crypto-cpp
+        CTEST_OUTPUT_ON_FAILURE=1 make -C build/Release test
     - run: npm install
     - run: npm test
