@@ -54,7 +54,7 @@
     "lint": "yarn run eslint src/*.ts --max-warnings 0",
     "build": "yarn run build:types && yarn run build:js && yarn run build:cpp",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --ignore src/crypto-cpp/build,src/crypto-cpp/**/node_modules --out-dir dist --extensions \".js,.ts\" --source-maps inline",
+    "build:js": "babel src --ignore src/crypto-cpp/build --out-dir dist --extensions \".js,.ts\" --source-maps inline",
     "build:cpp": "cd src/crypto-cpp && mkdir -p build/Release && cd build/Release && cmake -DCMAKE_BUILD_TYPE=Release ../.. && make",
     "prepublish": "yarn run build",
     "postinstall": "patch-package",
