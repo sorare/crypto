@@ -19,15 +19,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install C++ dependencies
-      run: |
-        apt-get update
-        apt-get install -y cmake clang libgtest-dev libgmock-dev
     - name: Use Node ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Install C++ dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake clang libgtest-dev libgmock-dev
     - run: npm run build:cpp
     - run: npm run test:cpp
     - run: npm install
