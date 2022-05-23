@@ -15,10 +15,7 @@ import {
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
 } from './starkware/signature';
-import {
-  sign as starkSignCpp,
-  verify as starkVerifyCpp,
-} from './crypto-cpp/src/starkware/crypto/ffi/js/crypto';
+import { verify as starkVerifyCpp } from './crypto-cpp/src/starkware/crypto/ffi/js/crypto';
 
 export { LimitOrder, Transfer, Signature } from './types';
 
@@ -126,21 +123,12 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
 };
 
 const sign = (privateKey: string, message: string): Signature => {
-  let sig;
-  if (useCryptoCpp) {
-    sig = starkSignCpp(
-      BigInt(privateKey),
-      BigInt(`0x${message}`),
-      BigInt(`0x03`)
-    );
-  } else {
-    const key = loadPrivateKey(privateKey);
-    sig = starkSign(key, message);
-  }
+  const key = loadPrivateKey(privateKey);
+  const { r, s } = starkSign(key, message);
 
   return {
-    r: `0x${sig.r.toString(16)}`,
-    s: `0x${sig.s.toString(16)}`,
+    r: `0x${r.toString(16)}`,
+    s: `0x${s.toString(16)}`,
   };
 };
 
