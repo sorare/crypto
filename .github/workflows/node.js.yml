@@ -24,5 +24,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Install C++ dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake clang libgtest-dev libgmock-dev
+    - run: npm run build:cpp
+    - run: npm run test:cpp
     - run: npm install
     - run: npm test
+    - run: USE_STARKWARE_CRYPTO_CPP=true npm test
