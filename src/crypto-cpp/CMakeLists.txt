@@ -4,11 +4,6 @@ if (NOT DEFINED CMAKE_CXX_COMPILER)
 endif()
 
 project(StarkwareCryptoLib VERSION 0.1.0 LANGUAGES CXX)
-include(CTest)
-# Basic setup for gtest
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-enable_testing()
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)

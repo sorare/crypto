@@ -35,7 +35,7 @@
     "eslint-plugin-chai-friendly": "^0.7.2",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^4.0.0",
-    "ffi-napi": "^3.1.0",
+    "ffi-napi": "^4.0.3",
     "jest": "^27.4.5",
     "patch-package": "^6.4.7",
     "prettier": "^2.5.1",
@@ -60,7 +60,7 @@
     "postinstall": "patch-package",
     "test": "jest ./src",
     "test:cpp": "cd src/crypto-cpp && CTEST_OUTPUT_ON_FAILURE=1 make -C build/Release test",
-    "package": "yarn build && cp package.json README.md LICENSE dist/ && cp src/crypto-cpp/src/starkware/crypto/ffi/js/libcrypto_c_exports.so dist/crypto-cpp/src/starkware/crypto/ffi/js && rm dist/index.test.* && rm -r dist/crypto-cpp/src/starkware/crypto/ffi/js/test",
+    "package": "yarn build && cp package.json README.md LICENSE dist/ && cp src/crypto-cpp/src/starkware/crypto/ffi/js/libcrypto_c_exports.* dist/crypto-cpp/src/starkware/crypto/ffi/js && rm dist/index.test.*",
     "release": "yarn clean && yarn version && yarn package && npm publish dist/ --access public"
   },
   "browserslist": [
