@@ -1,0 +1,3 @@
+[submodule "deps/crypto-cpp"]
+	path = deps/crypto-cpp
+	url = https://github.com/sorare/crypto-cpp
