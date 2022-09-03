@@ -14,7 +14,17 @@
         "deps/crypto-cpp/src/starkware/algebra/prime_field_element.cc"
       ],
       "include_dirs": ["deps/crypto-cpp/src"],
-      "cflags_cc": ["-std=c++17", "-Wall", "-Wextra", "-fno-strict-aliasing", "-fPIC", "-fexceptions", "-O3"]
+      "cflags_cc": ["-std=c++17", "-Wall", "-Wextra", "-fno-strict-aliasing", "-fPIC", "-fexceptions", "-O3"],
+      "conditions": [
+        [
+          "OS==\"mac\"", {
+            "xcode_settings": {
+              "GCC_ENABLE_CPP_RTTI": "YES",
+              "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
+            }
+          }
+        ]
+      ]
     }
   ]
 }
