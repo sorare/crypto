@@ -15,7 +15,7 @@ import {
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
 } from './starkware/signature';
-import { verify as starkVerifyCpp } from './crypto-cpp/src/starkware/crypto/ffi/js/crypto';
+import { verify as starkVerifyCpp } from './starkware/crypto';
 
 export { LimitOrder, Transfer, Signature } from './types';
 

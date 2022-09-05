@@ -62,5 +62,5 @@
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "exclude": ["src/crypto-cpp/build"]
+  "exclude": ["dist", "deps", "lib.js", "lib.d.ts"]
 }

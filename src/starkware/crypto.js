@@ -21,12 +21,15 @@ const assert = require('assert');
 const ffi = require('ffi-napi');
 
 // Native crypto bindings.
-const libcrypto = ffi.Library(path.join(__dirname, 'libcrypto_c_exports'), {
-  Hash: ['int', ['string', 'string', 'string']],
-  Verify: ['bool', ['string', 'string', 'string', 'string']],
-  Sign: ['int', ['string', 'string', 'string', 'string']],
-  GetPublicKey: ['int', ['string', 'string']],
-});
+const libcrypto = ffi.Library(
+  path.join(__dirname, '..', '..', 'build', 'Release', 'crypto'),
+  {
+    Hash: ['int', ['string', 'string', 'string']],
+    Verify: ['bool', ['string', 'string', 'string', 'string']],
+    Sign: ['int', ['string', 'string', 'string', 'string']],
+    GetPublicKey: ['int', ['string', 'string']],
+  }
+);
 
 const curveOrder = new BN(
   '800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f',
