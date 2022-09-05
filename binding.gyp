@@ -19,6 +19,11 @@
         [
           "OS==\"mac\"", {
             "xcode_settings": {
+              "OTHER_CFLAGS": [
+                "-mmacosx-version-min=10.7",
+                "-std=c++17",
+                "-stdlib=libc++"
+              ],
               "GCC_ENABLE_CPP_RTTI": "YES",
               "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
             }
