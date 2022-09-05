@@ -10,7 +10,7 @@
 <p align="center">
   <a href="https://www.typescriptlang.org/">
     <img src='https://badges.aleen42.com/src/typescript.svg' />
-  </a> 
+  </a>
   <a href="https://www.npmjs.com/package/@sorare/crypto">
     <img src='https://img.shields.io/npm/v/@sorare/crypto' />
   </a>
@@ -38,6 +38,10 @@ const limitOrder = /* The LimitOrder object you get from GraphQL */;
 
 const signature = signLimitOrder(privateKey, limitOrder);
 ```
+
+# C++ bindings
+
+Starting from v1.2.0, C++ bindings can be used for faster `verifyTransfer` and `verifyLimitOrder` operations. It uses Starkware's [crypto-cpp](https://github.com/starkware-libs/crypto-cpp) library and can be enabled by adding `USE_STARKWARE_CRYPTO_CPP=true` to your env. Please also note that `yarn install` will build C++ bindings (using [node-gyp](https://github.com/nodejs/node-gyp)) starting from this version.
 
 # License
 
