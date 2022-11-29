@@ -122,7 +122,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
   return getLimitOrderMsgHash(...args);
 };
 
-const sign = (privateKey: string, message: string): Signature => {
+export const sign = (privateKey: string, message: string): Signature => {
   const key = loadPrivateKey(privateKey);
   const { r, s } = starkSign(key, message);
 
@@ -132,7 +132,7 @@ const sign = (privateKey: string, message: string): Signature => {
   };
 };
 
-const verify = (publicKey: string, message: string, signature: Signature) => {
+export const verify = (publicKey: string, message: string, signature: Signature) => {
   if (useCryptoCpp) {
     return starkVerifyCpp(
       BigInt(publicKey),
