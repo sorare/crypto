@@ -62,5 +62,5 @@
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "exclude": ["dist", "deps", "lib.js", "lib.d.ts"]
+  "exclude": ["dist", "deps", "lib.js", "lib.d.ts", "lib-browser.js"]
 }

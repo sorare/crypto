@@ -1,4 +1,4 @@
-import { starkEc } from './starkware/signature';
+import { starkEc } from './starkware/native/signature';
 
 import {
   generateKey,

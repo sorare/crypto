@@ -7,7 +7,7 @@ import { LimitOrder, Transfer, Signature } from './types';
 import {
   getAccountPath,
   getKeyPairFromPath,
-} from './starkware/cpp/keyDerivation';
+} from './starkware/native/keyDerivation';
 import {
   starkEc,
   sign as starkSign,
@@ -16,11 +16,7 @@ import {
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
-} from './starkware/cpp/signature';
-import { useCryptoCpp } from './starkware/cpp/useCpp';
-import { verify as starkVerifyCpp } from './starkware/cpp/crypto';
-
-export { LimitOrder, Transfer, Signature } from './types';
+} from './starkware/native/signature';
 
 const PATH = "m/44'/60'/0'/0/0";
 
@@ -136,15 +132,6 @@ export const sign = (privateKey: string, message: string): Signature => {
 };
 
 export const verify = (publicKey: string, message: string, signature: Signature) => {
-  if (useCryptoCpp) {
-    return starkVerifyCpp(
-      BigInt(publicKey),
-      BigInt(`0x${message}`),
-      BigInt(signature.r),
-      BigInt(signature.s)
-    );
-  }
-
   const key = loadPublicKey(publicKey);
   const sig = {
     r: new BN(signature.r.substring(2), 16),

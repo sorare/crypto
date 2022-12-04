@@ -19,7 +19,7 @@ import hash from 'hash.js';
 import { curves as eCurves, ec as EllipticCurve } from 'elliptic';
 import assert from 'assert';
 
-import constantPointsHex from './constant_points';
+import constantPointsHex from '../constant_points';
 import { pedersen as pedersenCpp } from './crypto';
 
 export const useCryptoCpp = Boolean(process.env.USE_STARKWARE_CRYPTO_CPP);

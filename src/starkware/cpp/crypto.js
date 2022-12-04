@@ -22,7 +22,7 @@ const ffi = require('ffi-napi');
 
 // Native crypto bindings.
 const libcrypto = ffi.Library(
-  path.join(__dirname, '..', '..', 'build', 'Release', 'crypto'),
+  path.join(__dirname, '..', '..', '..', 'build', 'Release', 'crypto'),
   {
     Hash: ['int', ['string', 'string', 'string']],
     Verify: ['bool', ['string', 'string', 'string', 'string']],
