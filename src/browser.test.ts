@@ -1,4 +1,4 @@
-import { starkEc } from './starkware/cpp/signature';
+import { starkEc } from './starkware/native/signature';
 
 import executeTestCases from './test.base';
 
