@@ -2,6 +2,7 @@ import BN from 'bn.js';
 import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
 import { ec } from 'elliptic';
 import { hdkey } from 'ethereumjs-wallet';
+import hash from 'hash.js';
 
 import { LimitOrder, Transfer, Signature } from './types';
 import {
@@ -16,6 +17,7 @@ import {
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
+  pedersen,
 } from './starkware/cpp/signature';
 import { useCryptoCpp } from './starkware/cpp/useCpp';
 import { verify as starkVerifyCpp } from './starkware/cpp/crypto';
@@ -125,7 +127,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
   return getLimitOrderMsgHash(...args);
 };
 
-export const sign = (privateKey: string, message: string): Signature => {
+const sign = (privateKey: string, message: string): Signature => {
   const key = loadPrivateKey(privateKey);
   const { r, s } = starkSign(key, message);
 
@@ -135,7 +137,11 @@ export const sign = (privateKey: string, message: string): Signature => {
   };
 };
 
-export const verify = (publicKey: string, message: string, signature: Signature) => {
+const verify = (
+  publicKey: string,
+  message: string,
+  signature: Signature
+): boolean => {
   if (useCryptoCpp) {
     return starkVerifyCpp(
       BigInt(publicKey),
@@ -153,6 +159,20 @@ export const verify = (publicKey: string, message: string, signature: Signature)
 
   return starkVerify(key, message, sig);
 };
+
+const hashMessage = (message: string) => {
+  const h = hash.sha256().update(message).digest('hex');
+  return pedersen([h.substring(0, 32), h.substring(32)]);
+};
+
+export const signMessage = (privateKey: string, message: string): Signature =>
+  sign(privateKey, hashMessage(message));
+
+export const verifyMessage = (
+  publicKey: string,
+  message: string,
+  signature: Signature
+) => verify(publicKey, hashMessage(message), signature);
 
 export const signTransfer = (
   privateKey: string,

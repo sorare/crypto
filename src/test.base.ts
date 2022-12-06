@@ -5,6 +5,8 @@ import {
   signLimitOrder,
   verifyTransfer,
   verifyLimitOrder,
+  signMessage,
+  verifyMessage,
 } from '.';
 import { LimitOrder, Transfer } from './types';
 
@@ -166,6 +168,20 @@ export default function executeTestCases(starkEc: EllipticCurve) {
           verifyLimitOrder(`0x${publicKey}`, limitOrderWithFee, { r, s })
         ).toEqual(true);
       });
+    });
+  });
+
+  describe('signMessage', () => {
+    const message = 'random message';
+    const privateKey =
+      '0x03c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc';
+    const publicKey = starkEc
+      .keyFromPrivate(privateKey.substring(2), 'hex')
+      .getPublic(true, 'hex');
+
+    it('generates a signature that can be verified', () => {
+      const signature = signMessage(privateKey, message);
+      expect(verifyMessage(`0x${publicKey}`, message, signature)).toBeTruthy();
     });
   });
 }
