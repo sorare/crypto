@@ -3,8 +3,8 @@
   "description": "Crypto used in the Sorare stack",
   "author": "Sorare",
   "license": "MIT",
-  "version": "1.1.1",
-  "main": "index.js",
+  "version": "1.1.1-beta.0",
+  "main": "dist/index.js",
   "dependencies": {
     "bip39": "^3.0.4",
     "bn.js": "^5.2.0",
@@ -64,5 +64,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "files": [
+    "dist"
   ]
 }
