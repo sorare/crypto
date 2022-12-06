@@ -2,6 +2,7 @@ import BN from 'bn.js';
 import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
 import { ec } from 'elliptic';
 import { hdkey } from 'ethereumjs-wallet';
+import hash from 'hash.js';
 
 import { LimitOrder, Transfer, Signature } from './types';
 import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
