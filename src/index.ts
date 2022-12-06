@@ -13,6 +13,7 @@ import {
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
+  pedersen,
 } from './starkware/signature';
 
 export { LimitOrder, Transfer, Signature } from './types';
@@ -49,6 +50,40 @@ export const loadPrivateKey = (privateKey: string) =>
 
 export const loadPublicKey = (publicKey: string) =>
   starkEc.keyFromPublic(publicKey.substring(2), 'hex');
+
+const sign = (privateKey: string, message: string): Signature => {
+  const key = loadPrivateKey(privateKey);
+  const { r, s } = starkSign(key, message);
+
+  return {
+    r: `0x${r.toString(16)}`,
+    s: `0x${s.toString(16)}`,
+  };
+};
+
+const verify = (publicKey: string, message: string, signature: Signature) => {
+  const key = loadPublicKey(publicKey);
+  const sig = {
+    r: new BN(signature.r.substring(2), 16),
+    s: new BN(signature.s.substring(2), 16),
+  };
+
+  return starkVerify(key, message, sig);
+};
+
+const hashMessage = (message: string) => {
+  const h = hash.sha256().update(message).digest('hex');
+  return pedersen([h.substring(0, 32), h.substring(32)]);
+};
+
+export const signMessage = (privateKey: string, message: string): Signature =>
+  sign(privateKey, hashMessage(message));
+
+export const verifyMessage = (
+  publicKey: string,
+  message: string,
+  signature: Signature
+) => verify(publicKey, hashMessage(message), signature);
 
 const hashTransfer = (transfer: Transfer) => {
   const {
@@ -118,26 +153,6 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
     );
 
   return getLimitOrderMsgHash(...args);
-};
-
-const sign = (privateKey: string, message: string): Signature => {
-  const key = loadPrivateKey(privateKey);
-  const { r, s } = starkSign(key, message);
-
-  return {
-    r: `0x${r.toString(16)}`,
-    s: `0x${s.toString(16)}`,
-  };
-};
-
-const verify = (publicKey: string, message: string, signature: Signature) => {
-  const key = loadPublicKey(publicKey);
-  const sig = {
-    r: new BN(signature.r.substring(2), 16),
-    s: new BN(signature.s.substring(2), 16),
-  };
-
-  return starkVerify(key, message, sig);
 };
 
 export const signTransfer = (
