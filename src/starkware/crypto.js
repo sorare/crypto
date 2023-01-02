@@ -18,18 +18,26 @@ const path = require('path');
 const BN = require('bn.js');
 const BigIntBuffer = require('bigint-buffer');
 const assert = require('assert');
-const ffi = require('ffi-napi');
 
-// Native crypto bindings.
-const libcrypto = ffi.Library(
-  path.join(__dirname, '..', '..', 'build', 'Release', 'crypto'),
-  {
-    Hash: ['int', ['string', 'string', 'string']],
-    Verify: ['bool', ['string', 'string', 'string', 'string']],
-    Sign: ['int', ['string', 'string', 'string', 'string']],
-    GetPublicKey: ['int', ['string', 'string']],
-  }
-);
+const useCryptoCpp = Boolean(process.env.USE_STARKWARE_CRYPTO_CPP);
+let libcrypto;
+
+// Only load FFI bindings if we run in a Node environment and we asked for it
+if (useCryptoCpp) {
+  // eslint-disable-next-line
+  const ffi = require('ffi-napi');
+
+  // Native crypto bindings.
+  libcrypto = ffi.Library(
+    path.join(__dirname, '..', '..', 'build', 'Release', 'crypto'),
+    {
+      Hash: ['int', ['string', 'string', 'string']],
+      Verify: ['bool', ['string', 'string', 'string', 'string']],
+      Sign: ['int', ['string', 'string', 'string', 'string']],
+      GetPublicKey: ['int', ['string', 'string']],
+    }
+  );
+}
 
 const curveOrder = new BN(
   '800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f',
@@ -103,4 +111,5 @@ module.exports = {
   sign,
   verify,
   getPublicKey,
+  useCryptoCpp,
 };

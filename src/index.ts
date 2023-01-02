@@ -7,7 +7,6 @@ import hash from 'hash.js';
 import { LimitOrder, Transfer, Signature } from './types';
 import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
 import {
-  useCryptoCpp,
   starkEc,
   pedersen,
   sign as starkSign,
@@ -17,7 +16,7 @@ import {
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
 } from './starkware/signature';
-import { verify as starkVerifyCpp } from './starkware/crypto';
+import { verify as starkVerifyCpp, useCryptoCpp } from './starkware/crypto';
 
 export { LimitOrder, Transfer, Signature } from './types';
 
