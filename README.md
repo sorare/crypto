@@ -41,7 +41,7 @@ const signature = signLimitOrder(privateKey, limitOrder);
 
 # C++ bindings
 
-Starting from v1.2.0, C++ bindings can be used for faster `verifyTransfer` and `verifyLimitOrder` operations. It uses Starkware's [crypto-cpp](https://github.com/starkware-libs/crypto-cpp) library and can be enabled by adding `USE_STARKWARE_CRYPTO_CPP=true` to your env. Please also note that `yarn install` will build C++ bindings (using [node-gyp](https://github.com/nodejs/node-gyp)) starting from this version.
+Starting from v1.3.2, C++ bindings can be used for faster `verifyTransfer` and `verifyLimitOrder` operations. It uses Starkware's [crypto-cpp](https://github.com/starkware-libs/crypto-cpp) library and can be enabled by adding `USE_STARKWARE_CRYPTO_CPP=true` to your env. Please note that this variable also needs to be set when `yarn install` runs in order to build the C++ bindings using [node-gyp](https://github.com/nodejs/node-gyp).
 
 # License
 

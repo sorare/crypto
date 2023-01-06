@@ -20,9 +20,7 @@ import { curves as eCurves, ec as EllipticCurve } from 'elliptic';
 import assert from 'assert';
 
 import constantPointsHex from './constant_points';
-import { pedersen as pedersenCpp } from './crypto';
-
-export const useCryptoCpp = Boolean(process.env.USE_STARKWARE_CRYPTO_CPP);
+import { pedersen as pedersenCpp, useCryptoCpp } from './crypto';
 
 // Equals 2**251 + 17 * 2**192 + 1.
 export const prime = new BN(
