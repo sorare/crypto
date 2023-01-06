@@ -12,7 +12,7 @@
     "elliptic": "^6.5.4",
     "enc-utils": "^3.0.0",
     "ethereumjs-wallet": "^1.0.1",
-    "ffi-napi": "^3.1.0",
+    "ffi-napi": "^4.0.3",
     "hash.js": "^1.1.7",
     "patch-package": "^6.4.7"
   },
