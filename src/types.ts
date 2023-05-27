@@ -16,8 +16,8 @@ export interface Transfer {
   receiverPublicKey: string;
   nonce: number;
   expirationTimestamp: number;
-  condition?: string;
-  feeInfoUser?: Fee;
+  condition?: string | null;
+  feeInfoUser?: Fee | null;
 }
 
 export interface LimitOrder {
@@ -29,7 +29,7 @@ export interface LimitOrder {
   tokenBuy: string;
   nonce: number;
   expirationTimestamp: number;
-  feeInfo?: Fee;
+  feeInfo?: Fee | null;
 }
 
 export interface Signature {
