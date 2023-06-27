@@ -490,7 +490,7 @@ export function getTransferMsgHashWithFee(
   let cond = null;
   if (condition) {
     cond = condition.substring(2);
-    assertInRange(new BN(cond), zeroBn, prime, 'condition');
+    assertInRange(new BN(cond, 16), zeroBn, prime, 'condition');
     instructionType = fiveBn;
   }
   return hashTransferMsgWithFee(
