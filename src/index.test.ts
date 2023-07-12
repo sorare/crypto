@@ -17,10 +17,10 @@ describe('generateKey', () => {
     'range mountain blast problem vibrant void vivid doctor cluster enough melody ' +
     'salt layer language laptop boat major space monkey unit glimpse pause change vibrant';
 
-  const keyPair = generateKey(mnemonic);
+  const privateKey = generateKey(mnemonic);
 
   it('generates the expected private key', () => {
-    expect(keyPair.getPrivate('hex')).toEqual(
+    expect(privateKey).toEqual(
       '0646baa9aefb054dfa205c94b43781baa7b2ec2dfbcee64dbd9d2172283de902'
     );
   });

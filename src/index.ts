@@ -1,14 +1,14 @@
-import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
-import { ec } from 'elliptic';
-import { hdkey } from 'ethereumjs-wallet';
+import { generateMnemonic, mnemonicToSeedSync } from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/french';
+import { HDKey } from '@scure/bip32';
+import { secp256k1 } from '@noble/curves/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
+import { keccak_256 as keccak } from '@noble/hashes/sha3';
 import { bytesToHex as toHex } from '@noble/hashes/utils';
 import * as starknet from 'micro-starknet';
 
 import { LimitOrder, Transfer, Signature } from './types';
-import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
 import {
-  starkEc,
   getTransferMsgHash,
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
@@ -16,36 +16,37 @@ import {
 } from './starkware/signature';
 
 export { LimitOrder, Transfer, Signature } from './types';
+export { getPublicKey } from 'micro-starknet';
 
 const PATH = "m/44'/60'/0'/0/0";
 
+/**
+ * @returns {string} hex encoded 32 byte private string
+ */
 export const generateKey = (mnemonic?: string) => {
-  const seed = mnemonicToSeedSync(mnemonic || generateMnemonic());
-  const ethereumAddress = hdkey
-    .fromMasterSeed(seed)
-    .derivePath(PATH)
-    .getWallet()
-    .getAddressString();
+  const seed = mnemonicToSeedSync(mnemonic || generateMnemonic(wordlist));
 
-  const path = getAccountPath('starkex', 'sorare', ethereumAddress, 0);
-  return getKeyPairFromPath(mnemonic, path);
+  // Ethereum wallet public key
+  const publicKey = secp256k1
+    .getPublicKey(
+      toHex(HDKey.fromMasterSeed(seed).derive(PATH)!.privateKey!),
+      false
+    )
+    .slice(1);
+
+  const address = keccak(publicKey).slice(-20);
+
+  const path = starknet.getAccountPath(
+    'starkex',
+    'sorare',
+    `0x${toHex(address)}`,
+    0
+  );
+
+  const keySeed = toHex(HDKey.fromMasterSeed(seed).derive(path).privateKey!);
+  const privateKey = starknet.grindKey(`0x${keySeed}`);
+  return privateKey.padStart(64, '0');
 };
-
-export const exportPrivateKey = (key: ec.KeyPair) =>
-  `0x${key.getPrivate('hex').padStart(64, '0')}`;
-
-export const exportPublicKey = (key: ec.KeyPair) =>
-  `0x${key.getPublic(true, 'hex')}`;
-
-export const exportPublicKeyX = (key: ec.KeyPair) =>
-  `0x${key // force line-break (https://github.com/prettier/prettier/issues/3107)
-    .getPublic()
-    .getX()
-    .toString('hex')
-    .padStart(64, '0')}`;
-
-export const loadPrivateKey = (privateKey: string) =>
-  starkEc.keyFromPrivate(privateKey.substring(2), 'hex');
 
 const hashTransfer = (transfer: Transfer) => {
   const {
@@ -69,7 +70,7 @@ const hashTransfer = (transfer: Transfer) => {
     receiverPublicKey,
     expirationTimestamp,
     condition,
-  ];
+  ] as const;
 
   if (feeInfoUser)
     return getTransferMsgHashWithFee(
@@ -104,7 +105,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
     tokenBuy,
     nonce,
     expirationTimestamp,
-  ];
+  ] as const;
 
   if (feeInfo)
     return getLimitOrderMsgHashWithFee(
