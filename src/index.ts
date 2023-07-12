@@ -1,15 +1,14 @@
 import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
 import { ec } from 'elliptic';
 import { hdkey } from 'ethereumjs-wallet';
-import hash from 'hash.js';
+import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import * as starknet from 'micro-starknet';
 
 import { LimitOrder, Transfer, Signature } from './types';
 import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
 import {
   starkEc,
-  pedersen,
-  sign as starkSign,
   getTransferMsgHash,
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
@@ -47,9 +46,6 @@ export const exportPublicKeyX = (key: ec.KeyPair) =>
 
 export const loadPrivateKey = (privateKey: string) =>
   starkEc.keyFromPrivate(privateKey.substring(2), 'hex');
-
-export const loadPublicKey = (publicKey: string) =>
-  starkEc.keyFromPublic(publicKey.substring(2), 'hex');
 
 const hashTransfer = (transfer: Transfer) => {
   const {
@@ -122,8 +118,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
 };
 
 const sign = (privateKey: string, message: string): Signature => {
-  const key = loadPrivateKey(privateKey);
-  const { r, s } = starkSign(key, message);
+  const { r, s } = starknet.sign(message, privateKey);
 
   return {
     r: `0x${r.toString(16)}`,
@@ -137,8 +132,8 @@ const verify = ({ r, s }: Signature, message: string, publicKey: string) => {
 };
 
 const hashMessage = (message: string) => {
-  const h = hash.sha256().update(message).digest('hex');
-  return pedersen([h.substring(0, 32), h.substring(32)]);
+  const h = toHex(sha256(message));
+  return starknet.pedersen(h.substring(0, 32), h.substring(32)).slice(2);
 };
 
 export const signMessage = (privateKey: string, message: string): Signature =>
