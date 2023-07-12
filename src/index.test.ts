@@ -1,4 +1,5 @@
-import { starkEc } from './starkware/signature';
+import { getPublicKey } from 'micro-starknet';
+import { bytesToHex } from '@noble/hashes/utils';
 
 import {
   generateKey,
@@ -53,9 +54,7 @@ describe('transfer', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = starkEc
-        .keyFromPrivate(privateKey.substring(2), 'hex')
-        .getPublic(true, 'hex');
+      const publicKey = bytesToHex(getPublicKey(privateKey, true));
 
       expect(verifyTransfer(`0x${publicKey}`, transfer, { r, s })).toEqual(
         true
@@ -85,9 +84,7 @@ describe('transfer', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = starkEc
-        .keyFromPrivate(privateKey.substring(2), 'hex')
-        .getPublic(true, 'hex');
+      const publicKey = bytesToHex(getPublicKey(privateKey, true));
 
       expect(
         verifyTransfer(`0x${publicKey}`, transferWithFee, { r, s })
@@ -126,9 +123,7 @@ describe('limitOrder', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = starkEc
-        .keyFromPrivate(privateKey.substring(2), 'hex')
-        .getPublic(true, 'hex');
+      const publicKey = bytesToHex(getPublicKey(privateKey, true));
 
       expect(verifyLimitOrder(`0x${publicKey}`, limitOrder, { r, s })).toEqual(
         true
@@ -159,9 +154,7 @@ describe('limitOrder', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = starkEc
-        .keyFromPrivate(privateKey.substring(2), 'hex')
-        .getPublic(true, 'hex');
+      const publicKey = bytesToHex(getPublicKey(privateKey.slice(2), true));
 
       expect(
         verifyLimitOrder(`0x${publicKey}`, limitOrderWithFee, { r, s })
@@ -174,9 +167,7 @@ describe('signMessage', () => {
   const message = 'random message';
   const privateKey =
     '0x03c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc';
-  const publicKey = starkEc
-    .keyFromPrivate(privateKey.substring(2), 'hex')
-    .getPublic(true, 'hex');
+  const publicKey = bytesToHex(getPublicKey(privateKey.slice(2), true));
 
   it('generates a signature that can be verified', () => {
     const signature = signMessage(privateKey, message);
