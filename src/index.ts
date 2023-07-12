@@ -1,8 +1,8 @@
-import BN from 'bn.js';
 import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
 import { ec } from 'elliptic';
 import { hdkey } from 'ethereumjs-wallet';
 import hash from 'hash.js';
+import * as starknet from 'micro-starknet';
 
 import { LimitOrder, Transfer, Signature } from './types';
 import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
@@ -10,13 +10,11 @@ import {
   starkEc,
   pedersen,
   sign as starkSign,
-  verify as starkVerify,
   getTransferMsgHash,
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
 } from './starkware/signature';
-import { verify as starkVerifyCpp, useCryptoCpp } from './starkware/crypto';
 
 export { LimitOrder, Transfer, Signature } from './types';
 
@@ -133,23 +131,9 @@ const sign = (privateKey: string, message: string): Signature => {
   };
 };
 
-const verify = (publicKey: string, message: string, signature: Signature) => {
-  if (useCryptoCpp) {
-    return starkVerifyCpp(
-      BigInt(publicKey),
-      BigInt(`0x${message}`),
-      BigInt(signature.r),
-      BigInt(signature.s)
-    );
-  }
-
-  const key = loadPublicKey(publicKey);
-  const sig = {
-    r: new BN(signature.r.substring(2), 16),
-    s: new BN(signature.s.substring(2), 16),
-  };
-
-  return starkVerify(key, message, sig);
+const verify = ({ r, s }: Signature, message: string, publicKey: string) => {
+  const signature = new starknet.Signature(BigInt(r), BigInt(s));
+  return starknet.verify(signature, message, publicKey);
 };
 
 const hashMessage = (message: string) => {
@@ -164,7 +148,7 @@ export const verifyMessage = (
   publicKey: string,
   message: string,
   signature: Signature
-) => verify(publicKey, hashMessage(message), signature);
+) => verify(signature, hashMessage(message), publicKey);
 
 export const signTransfer = (
   privateKey: string,
@@ -182,7 +166,7 @@ export const verifyTransfer = (
 ): boolean => {
   const message = hashTransfer(transfer);
 
-  return verify(publicKey, message, signature);
+  return verify(signature, message, publicKey);
 };
 
 export const signLimitOrder = (
@@ -200,6 +184,5 @@ export const verifyLimitOrder = (
   signature: Signature
 ): boolean => {
   const message = hashLimitOrder(limitOrder);
-
-  return verify(publicKey, message, signature);
+  return verify(signature, message, publicKey);
 };
