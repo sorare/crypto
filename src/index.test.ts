@@ -1,8 +1,6 @@
-import { getPublicKey } from 'micro-starknet';
-import { bytesToHex } from '@noble/hashes/utils';
-
 import {
   generateKey,
+  exportPublicKey,
   signTransfer,
   signLimitOrder,
   verifyTransfer,
@@ -21,7 +19,7 @@ describe('generateKey', () => {
 
   it('generates the expected private key', () => {
     expect(privateKey).toEqual(
-      '0646baa9aefb054dfa205c94b43781baa7b2ec2dfbcee64dbd9d2172283de902'
+      '0x0646baa9aefb054dfa205c94b43781baa7b2ec2dfbcee64dbd9d2172283de902'
     );
   });
 });
@@ -54,11 +52,8 @@ describe('transfer', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = bytesToHex(getPublicKey(privateKey, true));
-
-      expect(verifyTransfer(`0x${publicKey}`, transfer, { r, s })).toEqual(
-        true
-      );
+      const publicKey = exportPublicKey(privateKey);
+      expect(verifyTransfer(publicKey, transfer, { r, s })).toEqual(true);
     });
   });
 
@@ -84,11 +79,11 @@ describe('transfer', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = bytesToHex(getPublicKey(privateKey, true));
+      const publicKey = exportPublicKey(privateKey);
 
-      expect(
-        verifyTransfer(`0x${publicKey}`, transferWithFee, { r, s })
-      ).toEqual(true);
+      expect(verifyTransfer(publicKey, transferWithFee, { r, s })).toEqual(
+        true
+      );
     });
   });
 });
@@ -123,11 +118,9 @@ describe('limitOrder', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = bytesToHex(getPublicKey(privateKey, true));
+      const publicKey = exportPublicKey(privateKey);
 
-      expect(verifyLimitOrder(`0x${publicKey}`, limitOrder, { r, s })).toEqual(
-        true
-      );
+      expect(verifyLimitOrder(publicKey, limitOrder, { r, s })).toEqual(true);
     });
   });
 
@@ -154,11 +147,11 @@ describe('limitOrder', () => {
     });
 
     it('can be verified', () => {
-      const publicKey = bytesToHex(getPublicKey(privateKey.slice(2), true));
+      const publicKey = exportPublicKey(privateKey);
 
-      expect(
-        verifyLimitOrder(`0x${publicKey}`, limitOrderWithFee, { r, s })
-      ).toEqual(true);
+      expect(verifyLimitOrder(publicKey, limitOrderWithFee, { r, s })).toEqual(
+        true
+      );
     });
   });
 });
@@ -167,10 +160,10 @@ describe('signMessage', () => {
   const message = 'random message';
   const privateKey =
     '0x03c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc';
-  const publicKey = bytesToHex(getPublicKey(privateKey.slice(2), true));
+  const publicKey = exportPublicKey(privateKey);
 
   it('generates a signature that can be verified', () => {
     const signature = signMessage(privateKey, message);
-    expect(verifyMessage(`0x${publicKey}`, message, signature)).toBeTruthy();
+    expect(verifyMessage(publicKey, message, signature)).toBeTruthy();
   });
 });
