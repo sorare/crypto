@@ -39,13 +39,8 @@ const limitOrder = /* The LimitOrder object you get from GraphQL */;
 const signature = signLimitOrder(privateKey, limitOrder);
 ```
 
-# C++ bindings
-
-Starting from v1.3.2, C++ bindings can be used for faster `verifyTransfer` and `verifyLimitOrder` operations. It uses Starkware's [crypto-cpp](https://github.com/starkware-libs/crypto-cpp) library and can be enabled by adding `USE_STARKWARE_CRYPTO_CPP=true` to your env. Please note that this variable also needs to be set when `yarn install` runs in order to build the C++ bindings using [node-gyp](https://github.com/nodejs/node-gyp).
-
 # Release
 
-- Clone git submodules
 - Bump version in package.json
 - Run `yarn release`
 

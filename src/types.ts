@@ -1,7 +1,3 @@
-import { ec } from 'elliptic';
-
-export type KeyPair = ec.KeyPair;
-
 export interface Fee {
   tokenId: string;
   sourceVaultId: number | string;

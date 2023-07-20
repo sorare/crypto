@@ -1,57 +1,56 @@
-import BN from 'bn.js';
-import { generateMnemonic, mnemonicToSeedSync } from 'bip39';
-import { ec } from 'elliptic';
-import { hdkey } from 'ethereumjs-wallet';
-import hash from 'hash.js';
+import { generateMnemonic, mnemonicToSeedSync } from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/french';
+import { HDKey } from '@scure/bip32';
+import { secp256k1 } from '@noble/curves/secp256k1';
+import { sha256 } from '@noble/hashes/sha256';
+import { keccak_256 as keccak } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
+import * as starknet from 'micro-starknet';
 
 import { LimitOrder, Transfer, Signature } from './types';
-import { getAccountPath, getKeyPairFromPath } from './starkware/keyDerivation';
 import {
-  starkEc,
-  pedersen,
-  sign as starkSign,
-  verify as starkVerify,
   getTransferMsgHash,
   getTransferMsgHashWithFee,
   getLimitOrderMsgHash,
   getLimitOrderMsgHashWithFee,
 } from './starkware/signature';
-import { verify as starkVerifyCpp, useCryptoCpp } from './starkware/crypto';
 
 export { LimitOrder, Transfer, Signature } from './types';
 
 const PATH = "m/44'/60'/0'/0/0";
 
+/**
+ * @returns {string} hex encoded 32 byte private string
+ */
 export const generateKey = (mnemonic?: string) => {
-  const seed = mnemonicToSeedSync(mnemonic || generateMnemonic());
-  const ethereumAddress = hdkey
-    .fromMasterSeed(seed)
-    .derivePath(PATH)
-    .getWallet()
-    .getAddressString();
+  const seed = mnemonicToSeedSync(mnemonic || generateMnemonic(wordlist));
 
-  const path = getAccountPath('starkex', 'sorare', ethereumAddress, 0);
-  return getKeyPairFromPath(mnemonic, path);
+  // Ethereum wallet public key
+  const publicKey = secp256k1
+    .getPublicKey(
+      bytesToHex(HDKey.fromMasterSeed(seed).derive(PATH)!.privateKey!),
+      false
+    )
+    .slice(1);
+
+  const address = keccak(publicKey).slice(-20);
+
+  const path = starknet.getAccountPath(
+    'starkex',
+    'sorare',
+    `0x${bytesToHex(address)}`,
+    0
+  );
+
+  const keySeed = bytesToHex(
+    HDKey.fromMasterSeed(seed).derive(path).privateKey!
+  );
+  const privateKey = starknet.grindKey(`0x${keySeed}`);
+  return `0x${privateKey.padStart(64, '0')}`;
 };
 
-export const exportPrivateKey = (key: ec.KeyPair) =>
-  `0x${key.getPrivate('hex').padStart(64, '0')}`;
-
-export const exportPublicKey = (key: ec.KeyPair) =>
-  `0x${key.getPublic(true, 'hex')}`;
-
-export const exportPublicKeyX = (key: ec.KeyPair) =>
-  `0x${key // force line-break (https://github.com/prettier/prettier/issues/3107)
-    .getPublic()
-    .getX()
-    .toString('hex')
-    .padStart(64, '0')}`;
-
-export const loadPrivateKey = (privateKey: string) =>
-  starkEc.keyFromPrivate(privateKey.substring(2), 'hex');
-
-export const loadPublicKey = (publicKey: string) =>
-  starkEc.keyFromPublic(publicKey.substring(2), 'hex');
+export const exportPublicKey = (privateKey: string) =>
+  `0x${bytesToHex(starknet.getPublicKey(privateKey, true))}`;
 
 const hashTransfer = (transfer: Transfer) => {
   const {
@@ -75,7 +74,7 @@ const hashTransfer = (transfer: Transfer) => {
     receiverPublicKey,
     expirationTimestamp,
     condition,
-  ];
+  ] as const;
 
   if (feeInfoUser)
     return getTransferMsgHashWithFee(
@@ -110,7 +109,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
     tokenBuy,
     nonce,
     expirationTimestamp,
-  ];
+  ] as const;
 
   if (feeInfo)
     return getLimitOrderMsgHashWithFee(
@@ -124,8 +123,7 @@ const hashLimitOrder = (limitOrder: LimitOrder) => {
 };
 
 const sign = (privateKey: string, message: string): Signature => {
-  const key = loadPrivateKey(privateKey);
-  const { r, s } = starkSign(key, message);
+  const { r, s } = starknet.sign(message, privateKey);
 
   return {
     r: `0x${r.toString(16)}`,
@@ -133,28 +131,14 @@ const sign = (privateKey: string, message: string): Signature => {
   };
 };
 
-const verify = (publicKey: string, message: string, signature: Signature) => {
-  if (useCryptoCpp) {
-    return starkVerifyCpp(
-      BigInt(publicKey),
-      BigInt(`0x${message}`),
-      BigInt(signature.r),
-      BigInt(signature.s)
-    );
-  }
-
-  const key = loadPublicKey(publicKey);
-  const sig = {
-    r: new BN(signature.r.substring(2), 16),
-    s: new BN(signature.s.substring(2), 16),
-  };
-
-  return starkVerify(key, message, sig);
+const verify = ({ r, s }: Signature, message: string, publicKey: string) => {
+  const signature = new starknet.Signature(BigInt(r), BigInt(s));
+  return starknet.verify(signature, message, publicKey);
 };
 
 const hashMessage = (message: string) => {
-  const h = hash.sha256().update(message).digest('hex');
-  return pedersen([h.substring(0, 32), h.substring(32)]);
+  const h = bytesToHex(sha256(message));
+  return starknet.pedersen(h.substring(0, 32), h.substring(32));
 };
 
 export const signMessage = (privateKey: string, message: string): Signature =>
@@ -164,7 +148,7 @@ export const verifyMessage = (
   publicKey: string,
   message: string,
   signature: Signature
-) => verify(publicKey, hashMessage(message), signature);
+) => verify(signature, hashMessage(message), publicKey);
 
 export const signTransfer = (
   privateKey: string,
@@ -182,7 +166,7 @@ export const verifyTransfer = (
 ): boolean => {
   const message = hashTransfer(transfer);
 
-  return verify(publicKey, message, signature);
+  return verify(signature, message, publicKey);
 };
 
 export const signLimitOrder = (
@@ -200,6 +184,5 @@ export const verifyLimitOrder = (
   signature: Signature
 ): boolean => {
   const message = hashLimitOrder(limitOrder);
-
-  return verify(publicKey, message, signature);
+  return verify(signature, message, publicKey);
 };
