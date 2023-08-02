@@ -28,6 +28,16 @@ export interface LimitOrder {
   feeInfo?: Fee | null;
 }
 
+export interface FiatTransfer {
+  mangopayWalletId: string;
+  operationHash: string;
+  currency: string;
+  amount: number;
+  nonce: number;
+}
+
+export type AuthorizationRequest = LimitOrder | Transfer | FiatTransfer;
+
 export interface Signature {
   r: string;
   s: string;
