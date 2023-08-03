@@ -7,7 +7,14 @@ import { keccak_256 as keccak } from '@noble/hashes/sha3';
 import { bytesToHex } from '@noble/hashes/utils';
 import * as starknet from 'micro-starknet';
 
-import { LimitOrder, Transfer, Signature } from './types';
+import {
+  LimitOrder,
+  Transfer,
+  FiatTransfer,
+  AuthorizationRequest,
+  Signature,
+} from './types';
+
 import {
   getTransferMsgHash,
   getTransferMsgHashWithFee,
@@ -141,6 +148,20 @@ const hashMessage = (message: string) => {
   return starknet.pedersen(h.substring(0, 32), h.substring(32));
 };
 
+const hashFiatTransfer = (fiatTransfer: FiatTransfer) => {
+  const { mangopayWalletId, operationHash, amount, currency, nonce } =
+    fiatTransfer;
+  const message = [
+    mangopayWalletId,
+    operationHash,
+    currency,
+    amount,
+    nonce,
+  ].join(':');
+
+  return hashMessage(message);
+};
+
 export const signMessage = (privateKey: string, message: string): Signature =>
   sign(privateKey, hashMessage(message));
 
@@ -185,4 +206,52 @@ export const verifyLimitOrder = (
 ): boolean => {
   const message = hashLimitOrder(limitOrder);
   return verify(signature, message, publicKey);
+};
+
+export const signFiatTransfer = (
+  privateKey: string,
+  fiatTransfer: FiatTransfer
+): Signature => {
+  const message = hashFiatTransfer(fiatTransfer);
+
+  return sign(privateKey, message);
+};
+
+export const verifyFiatTransfer = (
+  publicKey: string,
+  fiatTransfer: FiatTransfer,
+  signature: Signature
+): boolean => {
+  const message = hashFiatTransfer(fiatTransfer);
+
+  return verify(signature, message, publicKey);
+};
+
+export const isATransferAuthorizationRequest = (
+  request: AuthorizationRequest
+): request is Transfer => 'receiverVaultId' in request;
+
+export const isALimitOrderAuthorizationRequest = (
+  request: AuthorizationRequest
+): request is LimitOrder => 'vaultIdSell' in request;
+
+export const isAFiatTransferAuthorizationRequest = (
+  request: AuthorizationRequest
+): request is FiatTransfer => 'mangopayWalletId' in request;
+
+export const signAuthorizationRequest = (
+  privateKey: string,
+  authorizationRequest: AuthorizationRequest
+) => {
+  if (isATransferAuthorizationRequest(authorizationRequest)) {
+    return signTransfer(privateKey, authorizationRequest);
+  }
+  if (isALimitOrderAuthorizationRequest(authorizationRequest)) {
+    return signLimitOrder(privateKey, authorizationRequest);
+  }
+  if (isAFiatTransferAuthorizationRequest(authorizationRequest)) {
+    return signFiatTransfer(privateKey, authorizationRequest);
+  }
+
+  throw new Error('Invalid authorization request');
 };
