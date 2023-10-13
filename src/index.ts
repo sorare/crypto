@@ -56,8 +56,8 @@ export const generateKey = (mnemonic?: string) => {
   return `0x${privateKey.padStart(64, '0')}`;
 };
 
-export const exportPublicKey = (privateKey: string) =>
-  `0x${bytesToHex(starknet.getPublicKey(privateKey, true))}`;
+export const exportPublicKey = (privateKey: string, isCompressed = true) =>
+  `0x${bytesToHex(starknet.getPublicKey(privateKey, isCompressed))}`;
 
 const hashTransfer = (transfer: Transfer) => {
   const {
