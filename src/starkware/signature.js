@@ -244,8 +244,8 @@ function hashLimitOrderMsgWithFee(
  ---------------
  @param {string|number} vaultSell - uint31 (as int)
  @param {string|number} vaultBuy - uint31 (as int)
- @param {string} amountSell - uint63 (as decimal string)
- @param {string} amountBuy - uint63 (as decimal string)
+ @param {bigint} amountSell - uint63 (as decimal string)
+ @param {bigint} amountBuy - uint63 (as decimal string)
  @param {string} tokenSell - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {string} tokenBuy - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {number} nonce - uint31 (as int)
@@ -267,8 +267,6 @@ export function getLimitOrderMsgHash(
   );
   const vaultSellBi = BigInt(vaultSell);
   const vaultBuyBi = BigInt(vaultBuy);
-  const amountSellBi = BigInt(amountSell);
-  const amountBuyBi = BigInt(amountBuy);
   const tokenSellBi = BigInt(tokenSell);
   const tokenBuyBi = BigInt(tokenBuy);
   const nonceBi = BigInt(nonce);
@@ -276,8 +274,8 @@ export function getLimitOrderMsgHash(
 
   assertInRange(vaultSellBi, BigInt(0), twoPow31);
   assertInRange(vaultBuyBi, BigInt(0), twoPow31);
-  assertInRange(amountSellBi, BigInt(0), twoPow63);
-  assertInRange(amountBuyBi, BigInt(0), twoPow63);
+  assertInRange(amountSell, BigInt(0), twoPow63);
+  assertInRange(amountBuy, BigInt(0), twoPow63);
   assertInRange(tokenSellBi, BigInt(0), prime);
   assertInRange(tokenBuyBi, BigInt(0), prime);
   assertInRange(nonceBi, BigInt(0), twoPow31);
@@ -288,8 +286,8 @@ export function getLimitOrderMsgHash(
     instructionType,
     vaultSellBi,
     vaultBuyBi,
-    amountSellBi,
-    amountBuyBi,
+    amountSell,
+    amountBuy,
     nonceBi,
     expirationTimestampBi,
     tokenSell.substring(2),
@@ -304,14 +302,14 @@ export function getLimitOrderMsgHash(
  ---------------
  @param {string|number} vaultSell - uint31 (as int)
  @param {string|number} vaultBuy - uint31 (as int)
- @param {string} amountSell - uint63 (as decimal string)
- @param {string} amountBuy - uint63 (as decimal string)
+ @param {bigint} amountSell - uint63 (as decimal string)
+ @param {bigint} amountBuy - uint63 (as decimal string)
  @param {string} tokenSell - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {string} tokenBuy - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {number} nonce - uint31 (as int)
  @param {number} expirationTimestamp - uint22 (as int).
  @param {string|number} feeVaultId - uint31 (as int)
- @param {string} feeLimit - uint63 (as decimal string)
+ @param {bigint} feeLimit - uint63 (as decimal string)
  @param {string} feeToken - uint256 field element strictly less than the prime (as hex string with 0x)
 */
 export function getLimitOrderMsgHashWithFee(
@@ -333,42 +331,39 @@ export function getLimitOrderMsgHashWithFee(
   );
   const vaultSellBi = BigInt(vaultSell);
   const vaultBuyBi = BigInt(vaultBuy);
-  const amountSellBi = BigInt(amountSell);
-  const amountBuyBi = BigInt(amountBuy);
   const tokenSellBi = BigInt(tokenSell);
   const tokenBuyBi = BigInt(tokenBuy);
   const nonceBi = BigInt(nonce);
   const expirationTimestampBi = BigInt(expirationTimestamp);
   const feeTokenBi = BigInt(feeToken);
   const feeVaultIdBi = BigInt(feeVaultId);
-  const feeLimitBi = BigInt(feeLimit);
 
   assertInRange(vaultSellBi, BigInt(0), twoPow31);
   assertInRange(vaultBuyBi, BigInt(0), twoPow31);
-  assertInRange(amountSellBi, BigInt(0), twoPow63);
-  assertInRange(amountBuyBi, BigInt(0), twoPow63);
+  assertInRange(amountSell, BigInt(0), twoPow63);
+  assertInRange(amountBuy, BigInt(0), twoPow63);
   assertInRange(tokenSellBi, BigInt(0), prime);
   assertInRange(tokenBuyBi, BigInt(0), prime);
   assertInRange(nonceBi, BigInt(0), twoPow31);
   assertInRange(expirationTimestampBi, BigInt(0), twoPow22);
   assertInRange(feeTokenBi, BigInt(0), prime);
   assertInRange(feeVaultIdBi, BigInt(0), twoPow31);
-  assertInRange(feeLimitBi, BigInt(0), twoPow63);
+  assertInRange(feeLimit, BigInt(0), twoPow63);
 
   const instructionType = BigInt(3);
   return hashLimitOrderMsgWithFee(
     instructionType,
     vaultSellBi,
     vaultBuyBi,
-    amountSellBi,
-    amountBuyBi,
+    amountSell,
+    amountBuy,
     nonceBi,
     expirationTimestampBi,
     tokenSell.substring(2),
     tokenBuy.substring(2),
     feeToken.substring(2),
     feeVaultIdBi,
-    feeLimitBi
+    feeLimit
   );
 }
 
@@ -380,7 +375,7 @@ export function getLimitOrderMsgHashWithFee(
  is defined by the application.
  Expected types:
  ---------------
- @param {string} amount - uint63 (as decimal string)
+ @param {bigint} amount - uint63 (as decimal string)
  @param {number} nonce - uint31 (as int)
  @param {string|number} senderVaultId - uint31 (as int)
  @param {string} token - uint256 field element strictly less than the prime (as hex string with 0x)
@@ -405,7 +400,6 @@ export function getTransferMsgHash(
       (!condition || hasHexPrefix(condition)),
     'Hex strings expected to be prefixed with 0x.'
   );
-  const amountBi = BigInt(amount);
   const nonceBi = BigInt(nonce);
   const senderVaultIdBi = BigInt(senderVaultId);
   const tokenBi = BigInt(token);
@@ -413,7 +407,7 @@ export function getTransferMsgHash(
   const receiverPublicKeyBi = BigInt(receiverPublicKey);
   const expirationTimestampBi = BigInt(expirationTimestamp);
 
-  assertInRange(amountBi, BigInt(0), twoPow63);
+  assertInRange(amount, BigInt(0), twoPow63);
   assertInRange(nonceBi, BigInt(0), twoPow31);
   assertInRange(senderVaultIdBi, BigInt(0), twoPow31);
   assertInRange(tokenBi, BigInt(0), prime);
@@ -429,7 +423,7 @@ export function getTransferMsgHash(
     instructionType,
     senderVaultIdBi,
     receiverVaultIdBi,
-    amountBi,
+    amount,
     BigInt(0),
     nonceBi,
     expirationTimestampBi,
@@ -444,7 +438,7 @@ export function getTransferMsgHash(
 
  Expected types of fee info params:
  ---------------
- @param {string} amount - uint63 (as decimal string)
+ @param {bigint} amount - uint63 (as decimal string)
  @param {number} nonce - uint31 (as int)
  @param {string|number} senderVaultId - uint31 (as int)
  @param {string} token - uint256 field element strictly less than the prime (as hex string with 0x)
@@ -454,7 +448,7 @@ export function getTransferMsgHash(
  @param {string|null|undefined} condition - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {string} feeToken - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {number|string} feeVaultId - uint31 (as int)
- @param {string} feeLimit - uint63 (as decimal string)
+ @param {bigint} feeLimit - uint63 (as decimal string)
 */
 export function getTransferMsgHashWithFee(
   amount,
@@ -476,7 +470,6 @@ export function getTransferMsgHashWithFee(
       (!condition || hasHexPrefix(condition)),
     'Hex strings expected to be prefixed with 0x.'
   );
-  const amountBi = BigInt(amount);
   const nonceBi = BigInt(nonce);
   const senderVaultIdBi = BigInt(senderVaultId);
   const tokenBi = BigInt(token);
@@ -485,9 +478,8 @@ export function getTransferMsgHashWithFee(
   const expirationTimestampBi = BigInt(expirationTimestamp);
   const feeTokenBi = BigInt(feeToken);
   const feeVaultIdBi = BigInt(feeVaultId);
-  const feeLimitBi = BigInt(feeLimit);
 
-  assertInRange(amountBi, BigInt(0), twoPow63);
+  assertInRange(amount, BigInt(0), twoPow63);
   assertInRange(nonceBi, BigInt(0), twoPow31);
   assertInRange(senderVaultIdBi, BigInt(0), twoPow31);
   assertInRange(tokenBi, BigInt(0), prime);
@@ -496,7 +488,7 @@ export function getTransferMsgHashWithFee(
   assertInRange(expirationTimestampBi, BigInt(0), twoPow22);
   assertInRange(feeTokenBi, BigInt(0), prime);
   assertInRange(feeVaultIdBi, BigInt(0), twoPow31);
-  assertInRange(feeLimitBi, BigInt(0), twoPow63);
+  assertInRange(feeLimit, BigInt(0), twoPow63);
 
   let instructionType = BigInt(4);
   if (condition) {
@@ -507,14 +499,14 @@ export function getTransferMsgHashWithFee(
     instructionType,
     senderVaultIdBi,
     receiverVaultIdBi,
-    amountBi,
+    amount,
     nonceBi,
     expirationTimestampBi,
     token.substring(2),
     receiverStarkKey.substring(2),
     feeToken.substring(2),
     feeVaultIdBi,
-    feeLimitBi,
+    feeLimit,
     condition
   );
 }
