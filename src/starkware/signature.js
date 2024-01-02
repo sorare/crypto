@@ -244,8 +244,8 @@ function hashLimitOrderMsgWithFee(
  ---------------
  @param {string|number} vaultSell - uint31 (as int)
  @param {string|number} vaultBuy - uint31 (as int)
- @param {bigint} amountSell - uint63 (as decimal string)
- @param {bigint} amountBuy - uint63 (as decimal string)
+ @param {bigint} amountSell - uint63
+ @param {bigint} amountBuy - uint63
  @param {string} tokenSell - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {string} tokenBuy - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {number} nonce - uint31 (as int)
@@ -302,14 +302,14 @@ export function getLimitOrderMsgHash(
  ---------------
  @param {string|number} vaultSell - uint31 (as int)
  @param {string|number} vaultBuy - uint31 (as int)
- @param {bigint} amountSell - uint63 (as decimal string)
- @param {bigint} amountBuy - uint63 (as decimal string)
+ @param {bigint} amountSell - uint63
+ @param {bigint} amountBuy - uint63
  @param {string} tokenSell - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {string} tokenBuy - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {number} nonce - uint31 (as int)
  @param {number} expirationTimestamp - uint22 (as int).
  @param {string|number} feeVaultId - uint31 (as int)
- @param {bigint} feeLimit - uint63 (as decimal string)
+ @param {bigint} feeLimit - uint63
  @param {string} feeToken - uint256 field element strictly less than the prime (as hex string with 0x)
 */
 export function getLimitOrderMsgHashWithFee(
@@ -375,7 +375,7 @@ export function getLimitOrderMsgHashWithFee(
  is defined by the application.
  Expected types:
  ---------------
- @param {bigint} amount - uint63 (as decimal string)
+ @param {bigint} amount - uint63
  @param {number} nonce - uint31 (as int)
  @param {string|number} senderVaultId - uint31 (as int)
  @param {string} token - uint256 field element strictly less than the prime (as hex string with 0x)
@@ -438,7 +438,7 @@ export function getTransferMsgHash(
 
  Expected types of fee info params:
  ---------------
- @param {bigint} amount - uint63 (as decimal string)
+ @param {bigint} amount - uint63
  @param {number} nonce - uint31 (as int)
  @param {string|number} senderVaultId - uint31 (as int)
  @param {string} token - uint256 field element strictly less than the prime (as hex string with 0x)
@@ -448,7 +448,7 @@ export function getTransferMsgHash(
  @param {string|null|undefined} condition - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {string} feeToken - uint256 field element strictly less than the prime (as hex string with 0x)
  @param {number|string} feeVaultId - uint31 (as int)
- @param {bigint} feeLimit - uint63 (as decimal string)
+ @param {bigint} feeLimit - uint63
 */
 export function getTransferMsgHashWithFee(
   amount,
