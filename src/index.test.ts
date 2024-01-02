@@ -26,7 +26,7 @@ describe('generateKey', () => {
 
 describe('transfer', () => {
   const transfer: Transfer = {
-    amount: '2154549703648910716',
+    amount: 2154549703648910716n,
     nonce: 1,
     senderVaultId: '34',
     token: '0x3003a65651d3b9fb2eff934a4416db301afd112a8492aaf8d7297fc87dcd9f4',
@@ -64,7 +64,7 @@ describe('transfer', () => {
         sourceVaultId: '46',
         tokenId:
           '0x3003a65651d3b9fb2eff934a4416db301afd112a8492aaf8d7297fc87dcd9f4',
-        feeLimit: '10',
+        feeLimit: 10n,
       },
     };
     const { r, s } = signTransfer(privateKey, transferWithFee);
@@ -92,8 +92,8 @@ describe('limitOrder', () => {
   const limitOrder = {
     vaultIdSell: 21,
     vaultIdBuy: 27,
-    amountSell: '2154686749748910716',
-    amountBuy: '1470242115489520459',
+    amountSell: 2154686749748910716n,
+    amountBuy: 1470242115489520459n,
     tokenSell:
       '0x5fa3383597691ea9d827a79e1a4f0f7989c35ced18ca9619de8ab97e661020',
     tokenBuy:
@@ -131,7 +131,7 @@ describe('limitOrder', () => {
         sourceVaultId: '46',
         tokenId:
           '0x3003a65651d3b9fb2eff934a4416db301afd112a8492aaf8d7297fc87dcd9f4',
-        feeLimit: '10',
+        feeLimit: 10n,
       },
     };
 

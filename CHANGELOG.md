@@ -1,3 +1,7 @@
+# 3.0.0
+
+- Breaking change: Use bigint type for wei amounts
+
 # 2.0.0
 
 - Breaking change: Add dependency on BigInt support for all operations

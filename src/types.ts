@@ -1,13 +1,13 @@
 export interface Fee {
   tokenId: string;
   sourceVaultId: number | string;
-  feeLimit: string;
+  feeLimit: bigint;
 }
 
 export interface Transfer {
   senderVaultId: number | string;
   receiverVaultId: number | string;
-  amount: string;
+  amount: bigint;
   token: string;
   receiverPublicKey: string;
   nonce: number;
@@ -19,8 +19,8 @@ export interface Transfer {
 export interface LimitOrder {
   vaultIdSell: number | string;
   vaultIdBuy: number | string;
-  amountSell: string;
-  amountBuy: string;
+  amountSell: bigint;
+  amountBuy: bigint;
   tokenSell: string;
   tokenBuy: string;
   nonce: number;
