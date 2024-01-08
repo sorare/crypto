@@ -1,3 +1,4 @@
+import * as starknet from 'micro-starknet';
 import {
   generateKey,
   exportPublicKey,
@@ -5,6 +6,7 @@ import {
   signLimitOrder,
   verifyTransfer,
   verifyLimitOrder,
+  signMany,
   signMessage,
   verifyMessage,
 } from '.';
@@ -165,5 +167,23 @@ describe('signMessage', () => {
   it('generates a signature that can be verified', () => {
     const signature = signMessage(privateKey, message);
     expect(verifyMessage(publicKey, message, signature)).toBeTruthy();
+  });
+});
+
+describe('signMany', () => {
+  const values = ['0xff', '0x01'];
+  const privateKey =
+    '0x03c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc';
+  const publicKey = exportPublicKey(privateKey);
+
+  it('generates a signature that can be verified', () => {
+    const signature = signMany(privateKey, values);
+    expect(
+      starknet.verify(
+        new starknet.Signature(BigInt(signature.r), BigInt(signature.s)),
+        starknet.poseidonHashMany(values.map((v) => BigInt(v))).toString(16),
+        publicKey
+      )
+    ).toBeTruthy();
   });
 });

@@ -3,7 +3,7 @@
   "description": "Crypto used in the Sorare stack",
   "author": "Sorare",
   "license": "MIT",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "lib.js",
   "dependencies": {
     "@noble/curves": "^1.0.0",

@@ -227,6 +227,12 @@ export const verifyFiatTransfer = (
   return verify(signature, message, publicKey);
 };
 
+export const signMany = (privateKey: string, values: string[]) => {
+  const hash = starknet.poseidonHashMany(values.map((v) => BigInt(v)));
+
+  return sign(privateKey, hash.toString(16));
+};
+
 export const isATransferAuthorizationRequest = (
   request: AuthorizationRequest
 ): request is Transfer => 'receiverVaultId' in request;
