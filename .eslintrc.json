@@ -12,11 +12,10 @@
   },
   "globals": {
     "expect": true,
-    "assert": true,
-    "web3": true,
-    "Stripe": true
+    "assert": true
   },
   "parserOptions": {
+    "projectService": true,
     "ecmaVersion": 7,
     "sourceType": "module"
   },
